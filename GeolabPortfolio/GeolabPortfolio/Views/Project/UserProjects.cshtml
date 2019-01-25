@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "UserProjects";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.ViewModels;
+@using GeolabPortfolio.Models;
+@model UserProjectViewModel
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        ჯეოლაბელის პროექტები
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td>სურათი</td>
+                    <td>სახელი</td>
+                    <td>თარიღი</td>
+                    <td>თეგები</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Project project in Model.Projects)
+                {
+                    <tr>
+                        <td>
+                            <img src="~/Content/Uploads/@project.Image" class="img-thumbnail" width="100" />
+                        </td>
+                        <td>@project.Name</td>
+                        <td>@project.Published.ToShortDateString()</td>
+                        <td>
+                            @foreach (ProjectTag tag in Model.ProjectTags.Where(x => x.ProjectId == project.Id).ToList())
+                            {
+                                <p>@Model.TagDictionary[tag.Id]</p>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

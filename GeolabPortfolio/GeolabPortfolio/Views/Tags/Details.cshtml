@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@model GeolabPortfolio.ViewModels.EditTagViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        თეგი
+    </div>
+    <div class="card-body">
+        <div class="col-md-4">
+            <form action="~/Tags/Details" method="post">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="form-group">
+                    <label>სახელი</label>
+                    <input type="text" name="Name" class="form-control" value="@Model.Name"/>
+                    @Html.ValidationMessageFor(x=>x.Name,"", new { @class = "text-danger" })
+                </div>
+                <div class="form-group btn-group-sm">
+                    <input type="submit" class="btn btn-success" value="შენახვა" />
+                    <a href="#" class="btn btn-danger">წაშლა</a>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+

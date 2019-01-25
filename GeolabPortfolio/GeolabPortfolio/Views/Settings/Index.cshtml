@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.ViewModels;
+@model EditUserViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        ადმინის პარამეტრების რედაქტირება
+    </div>
+    <div class="card-body">
+        <div class="col-md-12">
+            <form action="~/Settings" method="post" enctype="multipart/form-data">
+                
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">ელ-ფოსტა</label>
+                        <input type="text" class="form-control" name="Email" placeholder="ელ-ფოსტა" value="@Model.Email">
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword4">ძველი პაროლი</label>
+                        <input type="password" class="form-control" name="CurrentPassword" placeholder="ძველი პაროლი" value="@Model.CurrentPassword">
+                        @Html.ValidationMessageFor(m=>m.CurrentPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">ახალი პაროლი</label>
+                        <input type="password" class="form-control" name="NewPassword" placeholder="ახალი პაროლი" value="@Model.NewPassword">
+                        @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword4">გაიმეორე პაროლი</label>
+                        <input type="password" class="form-control" name="RepeatPassword" placeholder="გაიმეორე ახალი პაროლი" value="@Model.RepeatPassword">
+                        @Html.ValidationMessageFor(m => m.RepeatPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group btn-group-sm">
+                    <input type="submit" class="btn btn-success" value="შენახვა" />
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+

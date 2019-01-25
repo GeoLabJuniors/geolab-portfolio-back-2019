@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+@using GeolabPortfolio.Models;
+@model IEnumerable<Tag>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        თეგები
+    </div>
+    <div class="card-body">
+        <a href="~/Tags/Create" class="btn btn-danger">ახალი თეგი</a>
+        <div class="table-responsive" style="margin-top:15px;">
+            <table class="table table-bordered" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>თაგი</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Tag t in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@t.Id</td>
+                            <td>@t.Name</td>
+                            <td>
+                                <a href="~/Tags/Details/@t.Id" class="btn btn-success btn-sm">დეტალურად</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

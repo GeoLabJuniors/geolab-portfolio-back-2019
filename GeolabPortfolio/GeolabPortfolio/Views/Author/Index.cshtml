@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.Models
+@model IEnumerable<Author>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        ჯეოლაბელები
+    </div>
+    <div class="card-body">
+        <a href="~/Author/Create" class="btn btn-danger">ახალი ჯეოლაბელი</a>
+        <div class="table-responsive" style="margin-top:15px;">
+            <table class="table table-bordered" id="dataTable" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ფოტო</th>
+                        <th>სახელი</th>
+                        <th>გვარი</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Author t in Model)
+                    {
+                        <tr>
+                            <td><img src="~/Content/Uploads/@t.Image" class="img-thumbnail" width="100" alt="@t.FirstName + @t.LastName" /></td>
+                            <td>@t.FirstName</td>
+                            <td>@t.LastName</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a href="~/Author/Details/@t.Id" class="btn btn-secondary">
+                                        <i class="fas fa-user"></i> დეტალურად
+                                    </a>
+                                    <a href="~/Author/Edit/@t.Id" class="btn btn-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="~/Project/UserProjects/@t.Id" class="btn btn-secondary">
+                                        <i class="fas fa-folder"></i> პროექტები
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

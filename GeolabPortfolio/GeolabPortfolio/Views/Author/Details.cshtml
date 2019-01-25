@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.Models;
+@using GeolabPortfolio.ViewModels;
+@model AuthorDetailsViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        დეტალურად Geolab-ელი
+    </div>
+    <div class="card-body">
+        <div class="col-md-12">
+
+            <a href="~/Project/Create/@Model.author.Id" class="btn btn-danger" style="margin-bottom:10px;">ახალი პროექტი</a>
+
+            <table class="table table-bordered">
+                <tr>
+                    <td>Id</td>
+                    <td>@Model.author.Id</td>
+                </tr>
+                <tr>
+                    <td>სახელი</td>
+                    <td>@Model.author.FirstName</td>
+                </tr>
+                <tr>
+                    <td>გვარი</td>
+                    <td>@Model.author.LastName</td>
+                </tr>
+                <tr>
+                    <td>სურათი</td>
+                    <td>
+                        <img src="~/Content/Uploads/@Model.author.Image" class="img-thumbnail" style="width:100px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fab fa-github"></i> Github</td>
+                    <td>@Model.author.GithubLink</td>
+                </tr>
+                <tr>
+                    <td><i class="fab fa-linkedin"></i> LinkedIn</td>
+                    <td>@Model.author.LinkedinLink</td>
+                </tr>
+                <tr>
+                    <td><i class="fab fa-dribbble"></i> Dribble</td>
+                    <td>@Model.author.DribbleLink</td>
+                <tr>
+                    <td><i class="fab fa-behance"></i> Behance</td>
+                    <td>@Model.author.BehanceLink</td>
+                </tr>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
