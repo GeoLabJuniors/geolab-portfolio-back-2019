@@ -47,7 +47,6 @@ namespace GeolabPortfolio.Controllers
         [HttpPost]
         public ActionResult Details(EditTagViewModel vm)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(vm);
@@ -63,7 +62,7 @@ namespace GeolabPortfolio.Controllers
             tag.Name = vm.Name;
             _context.SaveChanges();
 
-            return RedirectToAction("Details", "Tags", new { id = vm.Id });
+            return RedirectToAction("Index", "Tags");
         }
 
         public ActionResult Create()
@@ -74,13 +73,28 @@ namespace GeolabPortfolio.Controllers
         [HttpPost]
         public ActionResult Create(CreateTagViewModel vm)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
 
             _context.Tags.Add(new Tag { Name = vm.Name});
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Tags");
+        }
+
+        [HttpGet]
+        public ActionResult Remove(int Id)
+        {
+            Tag tag = _context.Tags.Where(x => x.Id == Id).FirstOrDefault();
+
+            if (tag == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
+            _context.Tags.Remove(tag);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Tags");

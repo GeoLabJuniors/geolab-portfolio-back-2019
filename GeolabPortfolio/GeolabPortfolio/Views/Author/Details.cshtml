@@ -37,22 +37,45 @@
                         <img src="~/Content/Uploads/@Model.author.Image" class="img-thumbnail" style="width:100px;" />
                     </td>
                 </tr>
+
                 <tr>
-                    <td><i class="fab fa-github"></i> Github</td>
-                    <td>@Model.author.GithubLink</td>
+                    <td>
+                        ლინკები
+                    </td>
+                    <td>
+
+                        @if (Model.author.GithubLink != null)
+                        {
+                            <a href="@Model.author.GithubLink" class="btn btn-danger" target="_blank">
+                                <i class="fab fa-github"></i> Github
+                            </a>
+                        }
+
+                        @if (Model.author.LinkedinLink != null)
+                        {
+                            <a href="@Model.author.LinkedinLink" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-linkedin"></i> Linkedin
+                            </a>
+                        }
+
+                        @if (Model.author.DribbleLink != null)
+                        {
+                            <a href="@Model.author.DribbleLink" class="btn btn-success" target="_blank">
+                                <i class="fab fa-dribbble"></i> Dribble
+                            </a>
+                        }
+
+                        @if (Model.author.BehanceLink != null)
+                        {
+                            <a href="@Model.author.BehanceLink" class="btn btn-info" target="_blank">
+                                <i class="fab fa-behance"></i> Behance
+                            </a>
+                        }
+
+
+                    </td>
                 </tr>
-                <tr>
-                    <td><i class="fab fa-linkedin"></i> LinkedIn</td>
-                    <td>@Model.author.LinkedinLink</td>
-                </tr>
-                <tr>
-                    <td><i class="fab fa-dribbble"></i> Dribble</td>
-                    <td>@Model.author.DribbleLink</td>
-                <tr>
-                    <td><i class="fab fa-behance"></i> Behance</td>
-                    <td>@Model.author.BehanceLink</td>
-                </tr>
-                </tr>
+
             </table>
         </div>
     </div>

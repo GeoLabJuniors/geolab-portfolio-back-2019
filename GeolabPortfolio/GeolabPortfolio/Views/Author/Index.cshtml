@@ -28,19 +28,26 @@
                     @foreach (Author t in Model)
                     {
                         <tr>
-                            <td><img src="~/Content/Uploads/@t.Image" class="img-thumbnail" width="100" alt="@t.FirstName + @t.LastName" /></td>
+                            <td>
+                                <a href="~/Author/Details/@t.Id">
+                                    <img src="~/Content/Uploads/@t.Image" class="img-thumbnail" width="100" alt="@t.FirstName + @t.LastName" />
+                                </a>
+                            </td>
                             <td>@t.FirstName</td>
                             <td>@t.LastName</td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <div class="btn-group pull-right" role="group" aria-label="Basic example">
                                     <a href="~/Author/Details/@t.Id" class="btn btn-secondary">
-                                        <i class="fas fa-user"></i> დეტალურად
+                                        <i class="fas fa-user"></i>
                                     </a>
                                     <a href="~/Author/Edit/@t.Id" class="btn btn-secondary">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="~/Project/UserProjects/@t.Id" class="btn btn-secondary">
-                                        <i class="fas fa-folder"></i> პროექტები
+                                        <i class="fas fa-folder"></i>
+                                    </a>
+                                    <a href="~/Author/Remove/@t.Id" class="btn btn-secondary">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
                             </td>

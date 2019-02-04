@@ -191,7 +191,30 @@ namespace GeolabPortfolio.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Details", "Author", new { Id = vm.Id });
+            return RedirectToAction("Index", "Author");
+        }
+
+        public ActionResult Remove(int Id)
+        {
+            Author author = _context.Authors.Where(x => x.Id == Id).FirstOrDefault();
+
+            if (author == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
+            //remove author image from ftp
+            var fullPath = Server.MapPath("~/Content/Uploads/" + author.Image);
+            System.IO.File.Delete(fullPath);
+
+            _context.Authors.Remove(author);
+
+            // remove project and tags here
+            
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Index", "Author");
         }
     }
 }
