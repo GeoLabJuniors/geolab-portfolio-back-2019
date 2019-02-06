@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using GeolabPortfolio.Models;
 
 namespace GeolabPortfolio.ViewModels
 {
@@ -14,6 +15,10 @@ namespace GeolabPortfolio.ViewModels
 
         [Required(ErrorMessage = "გვარის ველი შეავსეთ")]
         public string LastName { get; set; }
+
+        [Required(ErrorMessage = "ელ.ფოსტის ველი შეავსეთ")]
+        [IsAuthorEmailUnique]
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "სურათი საჭიროა")]
         public HttpPostedFileBase Image { get; set; }

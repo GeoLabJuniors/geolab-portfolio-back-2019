@@ -46,12 +46,30 @@
                                     <a href="~/Project/UserProjects/@t.Id" class="btn btn-secondary">
                                         <i class="fas fa-folder"></i>
                                     </a>
-                                    <a href="~/Author/Remove/@t.Id" class="btn btn-secondary">
-                                        <i class="fas fa-trash"></i>
+                                    <a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#Delete_@t.Id">
+                                        <i class="fas fa-trash fa-sm fa-fw mr-2"></i>
                                     </a>
                                 </div>
                             </td>
                         </tr>
+                        <!--Delete Dialog-->
+                        <div class="modal fade" id="Delete_@t.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">წაშლა</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">დარწმუნებული ხართ, რომ გსურთ წაშლა?</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">არა</button>
+                                        <a class="btn btn-primary" href="~/Author/Remove/@t.Id">დიახ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </tbody>
             </table>

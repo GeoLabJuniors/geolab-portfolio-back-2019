@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Web;
+using GeolabPortfolio.Models;
 
 namespace GeolabPortfolio.ViewModels
 {
@@ -15,8 +13,10 @@ namespace GeolabPortfolio.ViewModels
 
         [Required(ErrorMessage = "შეავსეთ გვარის ველი")]
         public string LastName { get; set; }
-        
-        
+
+        [Required(ErrorMessage = "შეავსეთ ელ.ფოსტის ველი")]
+        public string Email { get; set; }
+
         public HttpPostedFileBase Image { get; set; }
         public string FileName { get; set; }
 

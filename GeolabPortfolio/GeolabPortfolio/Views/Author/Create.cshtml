@@ -30,10 +30,17 @@
                         @Html.ValidationMessageFor(x=>x.LastName,"",new { @class="text-danger" })
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputAddress">სურათი</label>
-                    <input type="file" name="Image" value="@Model.Image">
-                    @Html.ValidationMessageFor(x=>x.Image,"",new { @class = "text-danger" })
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">ელ.ფოსტა</label>
+                        <input type="text" class="form-control" name="Email" placeholder="ელ ფოსტა" value="@Model.Email">
+                        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputAddress">სურათი</label>
+                        <input type="file" name="Image" class="form-control" value="@Model.Image">
+                        @Html.ValidationMessageFor(x => x.Image, "", new { @class = "text-danger" })
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">

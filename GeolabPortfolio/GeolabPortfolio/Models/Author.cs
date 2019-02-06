@@ -10,11 +10,11 @@ namespace GeolabPortfolio.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "შეიყვანეთ სახელი")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "შეიყვანეთ გვარი")]
         public string LastName { get; set; }
+
+        public string Email { get; set; }
 
         public string Image { get; set; }
         public string BehanceLink { get; set; }

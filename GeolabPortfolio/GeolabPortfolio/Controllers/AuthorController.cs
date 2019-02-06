@@ -71,6 +71,7 @@ namespace GeolabPortfolio.Controllers
             {
                 FirstName = vm.FirstName,
                 LastName = vm.LastName,
+                Email = vm.Email,
                 Image = pic,
                 BehanceLink = vm.BehanceLink,
                 GithubLink = vm.GithubLink,
@@ -125,6 +126,7 @@ namespace GeolabPortfolio.Controllers
                 FirstName = author.FirstName,
                 LastName = author.LastName,
                 FileName = author.Image,
+                Email = author.Email,
                 GithubLink = author.GithubLink,
                 LinkedinLink = author.LinkedinLink,
                 BehanceLink = author.BehanceLink,
@@ -184,11 +186,12 @@ namespace GeolabPortfolio.Controllers
             
             author.FirstName = vm.FirstName;
             author.LastName = vm.LastName;
+            author.Email = vm.Email;
             author.GithubLink = vm.GithubLink;
             author.LinkedinLink = vm.LinkedinLink;
             author.DribbleLink = vm.DribbleLink;
             author.BehanceLink = vm.BehanceLink;
-
+            
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Author");
