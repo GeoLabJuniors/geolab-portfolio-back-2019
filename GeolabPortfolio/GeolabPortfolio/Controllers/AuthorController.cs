@@ -43,9 +43,9 @@ namespace GeolabPortfolio.Controllers
 
             string []allowedExtensions = new string[] { ".jpg", ".png", ".jpeg" };
 
-             string pic = Guid.NewGuid().ToString() + Path.GetFileName(vm.Image.FileName);
+            string pic = Guid.NewGuid().ToString() + Path.GetFileName(vm.Image.FileName);
 
-             bool find = false;
+            bool find = false;
 
              foreach(string extension in allowedExtensions)
              {

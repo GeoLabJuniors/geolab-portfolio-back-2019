@@ -4,8 +4,8 @@ use [GeolabPortfolio];
 
 CREATE TABLE Users(
 	Id int primary key identity(1,1),
-	[Email] ntext not null,
-	[Password] ntext not null
+	[Email] nvarchar(100) not null,
+	[Password] nvarchar(100) not null
 )
 
 
@@ -13,6 +13,7 @@ CREATE TABLE Authors(
 	Id int primary key identity(1,1),
 	FirstName nvarchar(100) not null,
 	LastName nvarchar(100) not null,
+	[Email] nvarchar(100) not null,
 	[Image] ntext not null,
 	[BehanceLink] ntext,
 	[DribbleLink] ntext,
@@ -39,15 +40,14 @@ CREATE TABLE Projects(
 	AuthorId int foreign key references Authors(Id),
 	Name nvarchar(100) not null,
 	Published datetime not null,
-	[Image] nvarchar(100) not null,
 	[Description] ntext not null
 )
 
 truncate table Projects
 
-INSERT INTO Projects(AuthorId,Name,Published,[Image],[description])VALUES
-(1,N'პროექტის სახელი','2018-06-18','surati.jpg',N'აღწერა'),
-(1,N'პროექტის სახელი 1','2018-06-18 ','surati3.jpg',N'აღწერა 3')
+INSERT INTO Projects(AuthorId,Name,Published,[description])VALUES
+(1,N'პროექტის სახელი','2018-06-18',N'აღწერა'),
+(1,N'პროექტის სახელი 1','2018-06-18 ',N'აღწერა 3')
 
 select * from Projects;
 select * From Tags;
@@ -65,7 +65,8 @@ select * FROM ProjectTags;
 CREATE TABLE ProjectImages(
 	Id int primary key identity(1,1),
 	ProjectId int foreign key references Projects(Id),
-	ImageUrl ntext not null
+	ImageUrl ntext not null,
+	IsMain int not null
 )
 
 

@@ -126,11 +126,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Author.cs" />
-    <Compile Include="Models\IsAdminPasswordRight.cs" />
-    <Compile Include="Models\IsTagUnique.cs" />
-    <Compile Include="Models\IsAuthorEmailUnique.cs" />
-    <Compile Include="Models\PasswordHasher.cs" />
+    <Compile Include="Validators\IsAdminPasswordRight.cs" />
+    <Compile Include="Validators\IsTagUnique.cs" />
+    <Compile Include="Validators\IsAuthorEmailUnique.cs" />
+    <Compile Include="Utils\PasswordHasher.cs" />
     <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\ProjectImage.cs" />
     <Compile Include="Models\ProjectTag.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\User.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="ViewModels\AuthorDetailsViewModel.cs" />
     <Compile Include="ViewModels\EditAuthorViewModel.cs" />
     <Compile Include="ViewModels\EditTagViewModel.cs" />
+    <Compile Include="ViewModels\ProjectListViewModel.cs" />
     <Compile Include="ViewModels\UserLoginViewModel.cs" />
     <Compile Include="ViewModels\CreateAuthorViewModel.cs" />
     <Compile Include="ViewModels\CreateProjectViewModel.cs" />

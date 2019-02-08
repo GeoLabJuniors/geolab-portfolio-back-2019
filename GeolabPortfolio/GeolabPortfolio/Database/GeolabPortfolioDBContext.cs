@@ -15,5 +15,6 @@ namespace GeolabPortfolio.Database
         public DbSet<Author> Authors { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTag> ProjectTags { get; set; }
+        public DbSet<ProjectImage> ProjectImages { get; set; }
     }
 }

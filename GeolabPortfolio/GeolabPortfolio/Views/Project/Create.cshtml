@@ -6,8 +6,8 @@
 
 @using GeolabPortfolio.ViewModels
 @using GeolabPortfolio.Models;
-@model CreateProjectViewModel
 
+@model CreateProjectViewModel
 
 <div class="card mb-3">
     <div class="card-header">
@@ -18,11 +18,25 @@
         <div class="col-md-12">
             <form action="~/Project/Create" method="post" enctype="multipart/form-data">
                 @Html.ValidationSummary()
-                <input type="hidden" name="AuthorId" value="@Model.AuthorId" />
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">ავტორი</label>
+                        <select class="form-control" name="AuthorId">
+                            @foreach (var author in Model.Authors)
+                            {
+                                <option value="@author.Id">@author.FirstName @author.LastName</option>
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(x => x.AuthorId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">სახელი</label>
                         <input type="text" class="form-control" name="Name" placeholder="სახელი" value="@Model.Name">
+                        @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">თარიღი</label>
@@ -32,16 +46,14 @@
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
+                        @Html.ValidationMessageFor(x => x.Published, "", new { @class = "text-danger" })
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputAddress">სურათი</label>
-                    <input type="file" name="Image">
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="inputEmail4">აღწერა</label>
-                        <textarea class="form-control" name="Description">@Model.Description</textarea>
+                        <textarea class="form-control" name="Description" id="editor">@Model.Description</textarea>
+                        @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-row">
@@ -54,6 +66,16 @@
                             <label><input type="checkbox" name="TagIds[]" value="@tag.Id"> @tag.Name</label>
                         </div>
                     }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <button type="button" class="btn btn-info btn-sm" onclick="newImageButtonHandler()">ახალი სურათი</button>
+                    </div>
+                </div>
+
+                <div id="images">
+                    @Html.ValidationMessageFor(x => x.Photos, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group btn-group-sm">
@@ -70,11 +92,51 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<!--editor configuration-->
+<script src="https://cdn.ckeditor.com/ckeditor5/11.2.0/classic/ckeditor.js"></script>
 
 <script type="text/javascript">
+
+    const imagesElement = document.getElementById("images")
+    var counter = 0;
+    var selected = 0;
+
+    //timepicker configuration
     $(function () {
         $('#datetimepicker2').datetimepicker({
             locale: 'ka'
         });
     });
+
+    //editor configuration
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+
+    function radioClick(index) {
+        selected = index;
+    }
+
+    function newImageButtonHandler(e) {
+        imagesElement.innerHTML += (`
+            <div class="form-row" id="item`+ counter +`">
+                <div class="form-group col-md-7">
+                    <input type="file" name="Photos" class="form-control">               
+                </div>
+                <div class="form-group col-md-5">
+                    <span>
+                        <input type="radio" name="Primary" id="radio`+ counter + `" class="" value=` + counter + ` onclick="radioClick(` + counter +`)"> მთავარი სურათად ჩვენება
+                    </span>
+                </div>
+            </div>
+        `);
+
+        counter++;
+        if (selected != -1) {
+            var item = document.getElementById("radio" + selected);
+            item.checked = true;
+        }
+    }
 </script>
