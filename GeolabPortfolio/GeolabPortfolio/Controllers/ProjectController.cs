@@ -7,6 +7,7 @@ using GeolabPortfolio.ViewModels;
 using GeolabPortfolio.Database;
 using GeolabPortfolio.Models;
 using System.Collections.Generic;
+using GeolabPortfolio.Filters;
 
 namespace GeolabPortfolio.Controllers
 {
@@ -101,7 +102,6 @@ namespace GeolabPortfolio.Controllers
 
 
             //transaction
-
             using (var dbContextTransaction = _context.Database.BeginTransaction())
             {
                 try
@@ -156,27 +156,6 @@ namespace GeolabPortfolio.Controllers
             return RedirectToAction("Index", "Project");
         }
         
-        public string UploadFile(HttpPostedFileBase file)
-        {
-            string pic = Guid.NewGuid().ToString() + Path.GetFileName(file.FileName);
-            string path = Path.Combine(Server.MapPath("~/Content/uploads/"), pic);
-            file.SaveAs(path);
-            return pic;
-        }
-
-        public bool ValidateFile(HttpPostedFileBase file)
-        {
-            string[] AllowedFileExtensions = new string[] { ".png", ".jpg" };
-            var filename = file.FileName;
-            return AllowedFileExtensions.Contains(filename.Substring(filename.LastIndexOf('.')));
-        }
-
-        public void RemoveFile(string fileName)
-        {
-            var fullPath = Server.MapPath("~/Content/Uploads/" + fileName);
-            System.IO.File.Delete(fullPath);
-        }
-
         [HttpGet]
         public ActionResult Remove(int Id)
         {
@@ -207,6 +186,180 @@ namespace GeolabPortfolio.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Project");
+        }
+
+        public ActionResult Details(int Id)
+        {
+            Project project = _context.Projects.Where(x => x.Id == Id).FirstOrDefault();
+
+            if (project == null)
+            {
+                return RedirectToAction("Index", "Errors");
+            }
+
+            Author author = _context.Authors.Where(x => x.Id == project.AuthorId).FirstOrDefault();
+            List<ProjectTag> tags = _context.ProjectTags.Where(x => x.ProjectId == Id).ToList();
+            List<ProjectImage> images = _context.ProjectImages.Where(x => x.ProjectId == Id).ToList();
+
+            Dictionary<int, string> tagDictionary = new Dictionary<int, string>();
+
+            foreach (var tag in _context.Tags.ToList())
+            {
+                tagDictionary.Add(tag.Id, tag.Name);
+            }
+
+            ProjectDetailsViewModel vm = new ProjectDetailsViewModel
+            {
+                Project = project,
+                Tags = tags,
+                ProjectImages = images,
+                Author = author,
+                TagDictionary = tagDictionary
+            };
+
+            return View(vm);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            Project project = _context.Projects.Where(x => x.Id == id).FirstOrDefault();
+
+            if (project == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
+            HashSet<int> TagHash = new HashSet<int>();
+
+            foreach (var tag in _context.ProjectTags.Where(x => x.ProjectId == id).ToList())
+            {
+                TagHash.Add(tag.TagId);
+            }
+
+            EditProjectViewModel vm = new EditProjectViewModel
+            {
+                Id = project.Id,
+                AuthorId = project.AuthorId,
+                Name = project.Name,
+                Description = project.Description,
+                Published = project.Published,
+                Authors = _context.Authors.ToList(),
+                Tags = _context.Tags.ToList(),
+                TagHash = TagHash,
+                ProjectImages = _context.ProjectImages.ToList()
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EditProjectViewModel vm)
+        {
+            Project project = _context.Projects.Where(x => x.Id == vm.Id).FirstOrDefault();
+
+            if(project == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                HashSet<int> TagHash = new HashSet<int>();
+
+                foreach (var tag in _context.ProjectTags.Where(x => x.ProjectId == project.Id).ToList())
+                {
+                    TagHash.Add(tag.TagId);
+                }
+
+                vm.Authors = _context.Authors.ToList();
+                vm.Tags = _context.Tags.ToList();
+                vm.TagHash = TagHash;
+                vm.ProjectImages = _context.ProjectImages.ToList();
+                
+                return View(vm);
+            }
+
+            project.Name = vm.Name;
+            project.Description = vm.Description;
+            project.AuthorId = vm.AuthorId;
+            project.Published = vm.Published;
+            _context.SaveChanges();
+
+            HashSet<int> currentTags = new HashSet<int>();
+            HashSet<int> selectedTags = new HashSet<int>();
+
+            foreach (ProjectTag tag in _context.ProjectTags.Where(x => x.ProjectId == vm.Id).ToList())
+            {
+                currentTags.Add(tag.TagId);
+            }
+
+            foreach (int id in vm.SelectedTags)
+            {
+                selectedTags.Add(id);
+            }
+            
+            foreach (ProjectTag ptag in _context.ProjectTags.Where(x => x.ProjectId == vm.Id).ToList())
+            {
+                if (!selectedTags.Contains(ptag.TagId))
+                {
+                    _context.ProjectTags.Remove(ptag);
+                }
+            }
+
+            foreach (int TagId in vm.SelectedTags)
+            {
+                if (!currentTags.Contains(TagId))
+                {
+                    _context.ProjectTags.Add(new ProjectTag { ProjectId = vm.Id, TagId = TagId });
+                }
+            }
+
+            // images upload new ones
+            foreach (var photo in vm.Photos)
+            {
+                _context.ProjectImages.Add(new ProjectImage
+                {
+                    ProjectId = vm.Id,
+                    IsMain = 0,
+                    ImageUrl = UploadFile(photo)
+                });
+            }
+
+
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Project");
+        }
+
+        public void UpdateTags()
+        {
+
+        }
+
+        /*
+            additional function for working files 
+        */
+
+        public string UploadFile(HttpPostedFileBase file)
+        {
+            string pic = Guid.NewGuid().ToString() + Path.GetFileName(file.FileName);
+            string path = Path.Combine(Server.MapPath("~/Content/uploads/"), pic);
+            file.SaveAs(path);
+            return pic;
+        }
+
+        public bool ValidateFile(HttpPostedFileBase file)
+        {
+            string[] AllowedFileExtensions = new string[] { ".png", ".jpg" };
+            var filename = file.FileName;
+            return AllowedFileExtensions.Contains(filename.Substring(filename.LastIndexOf('.')));
+        }
+
+        public void RemoveFile(string fileName)
+        {
+            var fullPath = Server.MapPath("~/Content/Uploads/" + fileName);
+            System.IO.File.Delete(fullPath);
         }
     }
 }

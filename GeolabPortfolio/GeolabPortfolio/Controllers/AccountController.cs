@@ -52,15 +52,5 @@ namespace GeolabPortfolio.Controllers
             Session["Login-User"] = null;
             return RedirectToAction("Index", "Home");
         }
-
-        public ActionResult Index()
-        {
-            return View(_context.Users.ToList());
-        }
-
-        public ActionResult Test()
-        {
-            return View(_context.Tags.ToList());
-        }
     }
 }

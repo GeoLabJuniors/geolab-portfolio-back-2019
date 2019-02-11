@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.Models;
+@using GeolabPortfolio.ViewModels
+@model EditProjectViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        პროექტის რედაქტირება
+    </div>
+    <div class="card-body">
+        <div class="col-md-12">
+            <form action="~/Project/Edit" method="post" enctype="multipart/form-data" onsubmit="return onSubmitForm()">
+                @Html.ValidationSummary()
+
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">ავტორი</label>
+                        <select class="form-control" name="AuthorId">
+                            @foreach (var author in Model.Authors)
+                            {
+                                if (author.Id == Model.AuthorId)
+                                {
+                                    <option value="@author.Id" selected>@author.FirstName @author.LastName</option>
+                                }
+                                else
+                                {
+                                    <option value="@author.Id">@author.FirstName @author.LastName</option>
+                                }
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(x => x.AuthorId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">სახელი</label>
+                        <input type="text" class="form-control" name="Name" placeholder="სახელი" value="@Model.Name">
+                        @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">თარიღი</label>
+                        <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2" value="@Model.Published" />
+                            <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.Published, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">აღწერა</label>
+                        <textarea class="form-control" name="Description" id="editor">@Model.Description</textarea>
+                        @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">თეგები</label>
+                    </div>
+                    @foreach (Tag tag in Model.Tags)
+                    {
+                        <div class="form-group col-md-3">
+                            @if (Model.TagHash.Contains(tag.Id))
+                            {
+                                <label><input type="checkbox" name="SelectedTags[]" value="@tag.Id" checked> @tag.Name</label>
+                            }
+                            else
+                            {
+                                <label><input type="checkbox" name="SelectedTags[]" value="@tag.Id"> @tag.Name</label>
+                            }
+                        </div>
+                    }
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">ძველი სურათები</label>
+                    </div>
+                    @foreach (var image in Model.ProjectImages)
+                    {
+                    <div class="form-group col-md-6">
+                        <img src="~/Content/Uploads/@image.ImageUrl" style="width:150px;" />
+                        <label><input type="checkbox" name="RemovedImages[]">წაშლა</label>
+
+                        
+                        @if (image.IsMain == 1)
+                        {
+                            <label><input type="radio" checked name="Primary" value="@image.Id" />მთავარი</label>
+                        }
+                        else
+                        {
+                            <label><input type="radio" name="Primary" value="@image.Id" />მთავარი</label>
+                        }
+
+                    </div>
+                    }
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <button type="button" class="btn btn-info btn-sm" onclick="newImageButtonHandler()">ახალი სურათი</button>
+                    </div>
+                </div>
+
+                <div id="images">
+                </div>
+
+                <div class="form-group btn-group-sm">
+                    <input type="submit" class="btn btn-success" value="განახლება" />
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!--time picker-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<!--editor configuration-->
+<script src="https://cdn.ckeditor.com/ckeditor5/11.2.0/classic/ckeditor.js"></script>
+<script type="text/javascript">
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+
+    $(function () {
+        $('#datetimepicker2').datetimepicker({
+            locale: 'ka'
+        });
+    });
+
+    const imagesElement = document.getElementById("images")
+    var selected = 0;
+    var deletedImages = new Set();
+    var counter = document.getElementById("counter").value;
+    
+
+    function radioClick(index) {
+        selected = index;
+    }
+
+    function newImageButtonHandler(e) {
+        imagesElement.innerHTML += (`
+            <div class="form-row">
+                <div class="form-group col-md-7">
+                    <input type="file" name="Photos" class="form-control" id="file`+ counter + `" onchange="return fileValidation('file` + counter +`')">               
+                </div>
+                <div class="form-group col-md-5">
+                    <span>
+                        <input type="radio" name="Primary" id="radio`+ counter + `" class="" value=` + counter + ` onclick="radioClick(` + counter + `)"> მთავარი სურათად ჩვენება
+                    </span>
+                </div>
+            </div>
+        `);
+
+        counter++;
+        if (selected != -1) {
+            var item = document.getElementById("radio" + selected);
+            item.checked = true;
+        }
+    }
+
+    function checkboxClick(index) {
+        var check = document.getElementById("deleteCheckbox_" + index);
+        if (check.checked == true) {
+            deletedImages.add(index);
+        } else {
+            deletedImages.delete(index);
+        }
+    }
+
+    function fileValidation(filename) {
+        var fileInput = document.getElementById(filename);
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('არასწორია ფაილის ფორმატი');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('imagePreview').innerHTML = '<img src="' + e.target.result + '"/>';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+    }
+
+    function onSubmitForm() {
+        var radios = document.getElementsByName('Primary');
+        var primaryImageIndex = -1;
+
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                primaryImageIndex = i;
+                break;
+            }
+        }
+
+        if (deletedImages.has(primaryImageIndex)) {
+            alert("აირჩიე სხვა სურათი მთავარ სურათად!")
+            return false;
+        }
+        
+        return true;
+    }
+</script>

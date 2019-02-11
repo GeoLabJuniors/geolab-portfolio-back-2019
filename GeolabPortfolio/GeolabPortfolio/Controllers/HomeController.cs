@@ -14,9 +14,9 @@ namespace GeolabPortfolio.Controllers
             return View();
         }
 
-        public String Test()
+        public ActionResult About()
         {
-            return PasswordHasher.GetHash("123456789");
+            return View();
         }
     }
 }

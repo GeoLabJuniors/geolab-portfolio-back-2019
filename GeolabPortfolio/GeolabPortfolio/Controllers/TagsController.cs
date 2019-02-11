@@ -12,7 +12,6 @@ namespace GeolabPortfolio.Controllers
     [AdminLoginFilter]
     public class TagsController : Controller
     {
-
         GeolabPortfolioDBContext _context;
 
         public TagsController()
@@ -94,10 +93,65 @@ namespace GeolabPortfolio.Controllers
                 return RedirectToAction("Index", "Error");
             }
 
-            _context.Tags.Remove(tag);
-            _context.SaveChanges();
+            using (var dbContextTransaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    Dictionary<int, Project> projects = new Dictionary<int, Project>();
+                    List<ProjectTag> projectTags = _context.ProjectTags.Where(x => x.TagId == Id).ToList();
+                    foreach (ProjectTag projectTag in projectTags)
+                    {
+                        Project project = _context.Projects.Where(x => x.Id == projectTag.ProjectId).FirstOrDefault();
+                        if (project != null)
+                        {
+                            projects.Add(project.Id, project);
+                        }
+                        
+                    }
 
+                    foreach (KeyValuePair<int, Project> entry in projects)
+                    {
+                        List<ProjectTag> tags = _context.ProjectTags.Where(x => x.ProjectId == entry.Key).ToList();
+                        _context.ProjectTags.RemoveRange(tags);
+                        _context.SaveChanges();
+
+                        List<ProjectImage> projectImages = _context.ProjectImages.Where(x => x.ProjectId == entry.Key).ToList();
+                        _context.ProjectImages.RemoveRange(projectImages);
+                        RemoveFiles(projectImages.Select(x => x.ImageUrl).ToList());
+                        _context.SaveChanges();
+
+                        _context.Projects.Remove(entry.Value);
+                        _context.SaveChanges();
+                    }
+
+                    _context.Tags.Remove(tag);
+                    _context.SaveChanges();
+
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception)
+                {
+                    dbContextTransaction.Rollback();
+                    throw;
+                }
+            }
+
+            
             return RedirectToAction("Index", "Tags");
+        }
+
+        public void RemoveFile(string fileName)
+        {
+            var fullPath = Server.MapPath("~/Content/Uploads/" + fileName);
+            System.IO.File.Delete(fullPath);
+        }
+
+        public void RemoveFiles(List<string> files)
+        {
+            foreach (string file in files)
+            {
+                RemoveFile(file);
+            }
         }
     }
 }

@@ -206,18 +206,48 @@ namespace GeolabPortfolio.Controllers
                 return RedirectToAction("Index", "Error");
             }
 
-            //remove author image from ftp
-            var fullPath = Server.MapPath("~/Content/Uploads/" + author.Image);
-            System.IO.File.Delete(fullPath);
+            List<Project> projects = _context.Projects.Where(x => x.AuthorId == Id).ToList();
 
-            _context.Authors.Remove(author);
+            using (var dbContextTransaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (Project project in projects)
+                    {
+                        _context.ProjectTags.RemoveRange(_context.ProjectTags.Where(x => x.ProjectId == project.Id).ToList());
+                        _context.SaveChanges();
 
-            // remove project and tags here
+                        List<ProjectImage> images = _context.ProjectImages.Where(x => x.ProjectId == project.Id).ToList();
+                        foreach (ProjectImage image in images)
+                        {
+                            RemoveFile(image.ImageUrl);
+                            _context.ProjectImages.Remove(image);
+                        }
+                        _context.SaveChanges();
+
+                        _context.Projects.Remove(project);
+                        _context.SaveChanges();
+                    }
+
+                    _context.Authors.Remove(author);
+                    _context.SaveChanges();
+
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    throw;
+                }
+            }
             
-            _context.SaveChanges();
-
-
             return RedirectToAction("Index", "Author");
+        }
+
+        public void RemoveFile(string fileName)
+        {
+            var fullPath = Server.MapPath("~/Content/Uploads/" + fileName);
+            System.IO.File.Delete(fullPath);
         }
     }
 }

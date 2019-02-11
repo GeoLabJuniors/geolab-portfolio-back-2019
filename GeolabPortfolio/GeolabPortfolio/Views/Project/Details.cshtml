@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.ViewModels;
+@model ProjectDetailsViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        დეტალურად პროექტი
+    </div>
+    <div class="card-body">
+        <div class="col-md-12">
+
+            <table class="table table-bordered">
+                <tr>
+                    <td>Id</td>
+                    <td>@Model.Project.Id</td>
+                </tr>
+                <tr>
+                    <td>სახელი</td>
+                    <td>@Model.Project.Name</td>
+                </tr>
+                <tr>
+                    <td>ავტორი</td>
+                    <td>@Model.Author.FirstName @Model.Author.LastName</td>
+                </tr>
+                <tr>
+                    <td>გამოქვეყნდა</td>
+                    <td>@Model.Project.Published</td>
+                </tr>
+                <tr>
+                    <td>თეგები</td>
+                    <td>
+                        @foreach (var item in Model.Tags)
+                        {
+                            <span class="badge badge-dark">@Model.TagDictionary[item.TagId]</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>მთავარი სურათი</td>
+                    <td>
+                        <img src="~/Content/Uploads/@Model.ProjectImages.Where(x=>x.IsMain == 1).FirstOrDefault().ImageUrl" class="img-thumbnail" style="width:100px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>სხვა სურათები</td>
+                    <td>
+                        @foreach (var item in Model.ProjectImages.Where(x => x.IsMain == 0).ToList())
+                        {
+                            <img src="~/Content/Uploads/@item.ImageUrl" class="img-thumbnail" style="width:100px;">
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>აღწერა</td>
+                    <td>
+                        <textarea name="Description" id="editor">@Model.Project.Description</textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--editor configuration-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/11.2.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
