@@ -23,14 +23,39 @@ namespace GeolabPortfolio.ViewModels
 
         [Required(ErrorMessage = "თარიღი დაამატეთ")]
         public DateTime Published { get; set; }
-        
+
+        [Required(ErrorMessage = "აირჩიეთ თეგები")]
+        public int[] SelectedTags { get; set; }
+
         public HttpPostedFileBase[] Photos { get; set; } // new image 
 
-        public int[] SelectedTags { get; set; }
+        public int Primary { get; set; }
+        
+        public int[] RemoveImages { get; set; }
 
         public List<Author> Authors { get; set; }
         public List<Tag> Tags { get; set; }
         public HashSet<int> TagHash { get; set; }
         public List<ProjectImage> ProjectImages { get; set; }
+
+
+        // user can't remove image, which is main
+        public bool isDeleteImageRight()
+        {
+            if (RemoveImages == null)
+            {
+                return true;
+            }
+
+            foreach (var item in RemoveImages)
+            {
+                if (item == Primary)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace GeolabPortfolio.ViewModels
 
         [Required(ErrorMessage = "ელ.ფოსტის ველი შეავსეთ")]
         [IsAuthorEmailUnique]
+        [EmailAddress(ErrorMessage = "არ არის სწორი ელ.ფოსტა ფორმატი")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "სურათი საჭიროა")]

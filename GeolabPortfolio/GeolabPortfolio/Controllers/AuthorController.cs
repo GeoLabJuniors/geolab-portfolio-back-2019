@@ -230,6 +230,7 @@ namespace GeolabPortfolio.Controllers
                     }
 
                     _context.Authors.Remove(author);
+                    RemoveFile(author.Image);
                     _context.SaveChanges();
 
                     dbContextTransaction.Commit();

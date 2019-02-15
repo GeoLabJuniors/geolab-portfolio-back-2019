@@ -11,7 +11,7 @@ using GeolabPortfolio.Filters;
 
 namespace GeolabPortfolio.Controllers
 {
-//    [AdminLoginFilter]
+    [AdminLoginFilter]
     public class ProjectController : Controller
     {
         GeolabPortfolioDBContext _context;
@@ -71,7 +71,7 @@ namespace GeolabPortfolio.Controllers
             CreateProjectViewModel vm = new CreateProjectViewModel();
             vm.Authors = _context.Authors.ToList();
             vm.Tags = _context.Tags.ToList();
-            vm.Published = DateTime.Now;
+            vm.Published = DateTime.Now.Date;
             return View(vm);
         }
 
@@ -82,7 +82,7 @@ namespace GeolabPortfolio.Controllers
             {
                 vm.Authors = _context.Authors.ToList();
                 vm.Tags = _context.Tags.ToList();
-                vm.Published = DateTime.Now;
+                vm.Published = DateTime.Now.Date;
                 return View(vm);
             }
 
@@ -95,7 +95,7 @@ namespace GeolabPortfolio.Controllers
                     ModelState.AddModelError("error", "არასწორია ფაილის ფორმატი");
                     vm.Authors = _context.Authors.ToList();
                     vm.Tags = _context.Tags.ToList();
-                    vm.Published = DateTime.Now;
+                    vm.Published = DateTime.Now.Date;
                     return View(vm);
                 }
             }
@@ -112,7 +112,7 @@ namespace GeolabPortfolio.Controllers
                         AuthorId = vm.AuthorId,
                         Description = vm.Description,
                         Name = vm.Name,
-                        Published = DateTime.Now
+                        Published = vm.Published
                     };
 
                     _context.Projects.Add(project);
@@ -246,7 +246,7 @@ namespace GeolabPortfolio.Controllers
                 Authors = _context.Authors.ToList(),
                 Tags = _context.Tags.ToList(),
                 TagHash = TagHash,
-                ProjectImages = _context.ProjectImages.ToList()
+                ProjectImages = _context.ProjectImages.Where(x=>x.ProjectId == project.Id).ToList()
             };
 
             return View(vm);
@@ -274,8 +274,28 @@ namespace GeolabPortfolio.Controllers
                 vm.Authors = _context.Authors.ToList();
                 vm.Tags = _context.Tags.ToList();
                 vm.TagHash = TagHash;
-                vm.ProjectImages = _context.ProjectImages.ToList();
+                vm.ProjectImages = _context.ProjectImages.Where(x=>x.ProjectId == project.Id).ToList();
                 
+                return View(vm);
+            }
+
+            if (!vm.isDeleteImageRight())
+            {
+
+                HashSet<int> TagHash = new HashSet<int>();
+
+                foreach (var tag in _context.ProjectTags.Where(x => x.ProjectId == project.Id).ToList())
+                {
+                    TagHash.Add(tag.TagId);
+                }
+
+                vm.Authors = _context.Authors.ToList();
+                vm.Tags = _context.Tags.ToList();
+                vm.TagHash = TagHash;
+                vm.ProjectImages = _context.ProjectImages.Where(x => x.ProjectId == project.Id).ToList();
+
+                ModelState.AddModelError("error", "აირჩიე ახალი მთავარი სურათი!");
+
                 return View(vm);
             }
 
@@ -298,6 +318,7 @@ namespace GeolabPortfolio.Controllers
                 selectedTags.Add(id);
             }
             
+            //remove tags
             foreach (ProjectTag ptag in _context.ProjectTags.Where(x => x.ProjectId == vm.Id).ToList())
             {
                 if (!selectedTags.Contains(ptag.TagId))
@@ -305,7 +326,9 @@ namespace GeolabPortfolio.Controllers
                     _context.ProjectTags.Remove(ptag);
                 }
             }
+            _context.SaveChanges();
 
+            //make new tags
             foreach (int TagId in vm.SelectedTags)
             {
                 if (!currentTags.Contains(TagId))
@@ -313,33 +336,61 @@ namespace GeolabPortfolio.Controllers
                     _context.ProjectTags.Add(new ProjectTag { ProjectId = vm.Id, TagId = TagId });
                 }
             }
+            _context.SaveChanges();
 
             // images upload new ones
-            foreach (var photo in vm.Photos)
+
+            if (vm.Primary > 0) // თუ ადმინმა უკვე ატვირთული სურათებიდან არჩია მთავარი
             {
-                _context.ProjectImages.Add(new ProjectImage
+                var projectImage = _context.ProjectImages.Where(x => x.ProjectId == project.Id && x.IsMain == 1).FirstOrDefault();
+                if (projectImage.Id != vm.Primary)
                 {
-                    ProjectId = vm.Id,
-                    IsMain = 0,
-                    ImageUrl = UploadFile(photo)
-                });
+                    projectImage.IsMain = 0;
+                    ProjectImage imageUpdate = _context.ProjectImages.Where(x => x.Id == vm.Primary).FirstOrDefault();
+                    imageUpdate.IsMain = 1;
+                    _context.SaveChanges();
+                }
             }
 
+            if (vm.Photos != null)
+            {
+                //vm.Primary = Math.Abs(vm.Primary);
+
+                if (vm.Primary < 0)
+                {
+                    ProjectImage image = _context.ProjectImages.Where(x => x.ProjectId == project.Id).FirstOrDefault();
+                    image.IsMain = 0;
+
+                }
 
 
-            _context.SaveChanges();
+                for (int i = 0; i < vm.Photos.Length; i++)
+                {
+                    _context.ProjectImages.Add(new ProjectImage
+                    {
+                        ProjectId = vm.Id,
+                        IsMain = (vm.Primary < 0 && Math.Abs(vm.Primary) == i + 1) ? (1) : (0),
+                        ImageUrl = UploadFile(vm.Photos[i])
+                    });
+
+                }
+                
+                _context.SaveChanges();
+            }
+
+            if (vm.RemoveImages != null)
+            {
+                foreach (int id in vm.RemoveImages)
+                {
+                    ProjectImage projectImage = _context.ProjectImages.Where(x => x.Id == id).FirstOrDefault();
+                    RemoveFile(projectImage.ImageUrl);
+                    _context.ProjectImages.Remove(projectImage);    
+                }
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("Index", "Project");
         }
-
-        public void UpdateTags()
-        {
-
-        }
-
-        /*
-            additional function for working files 
-        */
 
         public string UploadFile(HttpPostedFileBase file)
         {

@@ -24,6 +24,5 @@ namespace GeolabPortfolio.ViewModels
         public string DribbleLink { get; set; }
         public string LinkedinLink { get; set; }
         public string GithubLink { get; set; }
-
     }
 }

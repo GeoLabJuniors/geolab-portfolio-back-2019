@@ -17,7 +17,7 @@
         თეგები
     </div>
     <div class="card-body">
-        <a href="~/Tags/Create" class="btn btn-danger">ახალი თეგი</a>
+        <a href="~/Tags/Create" class="btn btn-primary">ახალი თეგი</a>
         <div class="table-responsive" style="margin-top:15px;">
             <table class="table table-bordered" cellspacing="0">
                 <thead>
@@ -35,8 +35,27 @@
                             <td>@t.Name</td>
                             <td>
                                 <a href="~/Tags/Details/@t.Id" class="btn btn-success btn-sm">დეტალურად</a>
+                                <a class="btn btn-danger btn-sm"  href="#" data-toggle="modal" data-target="#Delete_@t.Id">წაშლა</a>
                             </td>
                         </tr>
+                        <!--popup dialog-->
+                        <div class="modal fade" id="Delete_@t.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">წაშლა</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">დარწმუნებული ხართ, რომ გსურთ წაშლა?</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">არა</button>
+                                        <a class="btn btn-primary" href="~/Tags/Remove/@t.Id">დიახ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </tbody>
             </table>
