@@ -93,20 +93,23 @@ namespace GeolabPortfolio.Controllers
                 return RedirectToAction("Index", "Error");
             }
 
-            Dictionary<int, string> TagDictionary = new Dictionary<int, string>();
-
-            foreach (Tag tag in _context.Tags.ToList())
-            {
-                TagDictionary.Add(tag.Id, tag.Name);
-            }
+            var courses = (from project in _context.Projects.ToList()
+                           join authors in _context.Authors.ToList() on project.AuthorId equals authors.Id
+                           join projectimages in _context.ProjectImages.ToList() on project.Id equals projectimages.ProjectId
+                           where projectimages.IsMain == 1 && project.AuthorId == Id
+                           select new ProjectListViewModel
+                           {
+                               Id = project.Id,
+                               Name = project.Name,
+                               Image = projectimages.ImageUrl,
+                               AuthorFullName = authors.FirstName + " " + authors.LastName
+                           }).ToList();
 
             AuthorDetailsViewModel vm = new AuthorDetailsViewModel
             {
                 author = author,
-                Projects = _context.Projects.Where(x=>x.AuthorId == Id).ToList(),
-                TagDictionary = TagDictionary,
-                ProjectTags = _context.ProjectTags.ToList()
-            };
+                Courses = courses
+            }; 
 
             return View(vm);
         }

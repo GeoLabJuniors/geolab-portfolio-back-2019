@@ -9,8 +9,6 @@ namespace GeolabPortfolio.ViewModels
     public class AuthorDetailsViewModel
     {
         public Author author { get; set; }
-        public List<Project> Projects { get; set; }
-        public Dictionary<int, string> TagDictionary;
-        public List<ProjectTag> ProjectTags;
+        public List<ProjectListViewModel> Courses { get; set; }
     }
 }
