@@ -5,7 +5,7 @@ namespace GeolabPortfolio.Database
 {
     public class GeolabPortfolioDBContext : DbContext
     {
-        public GeolabPortfolioDBContext() : base("Data Source=.;Initial Catalog=GeolabPortfolio;Integrated Security=True")
+        public GeolabPortfolioDBContext():base("Data Source=.;Initial Catalog=GeolabPortfolio;Integrated Security=True")
         {
 
         }
