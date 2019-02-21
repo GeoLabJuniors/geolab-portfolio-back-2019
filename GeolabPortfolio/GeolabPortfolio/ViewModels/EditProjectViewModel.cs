@@ -20,10 +20,7 @@ namespace GeolabPortfolio.ViewModels
         [Required(ErrorMessage = "აღწერა დაამატეთ")]
         [AllowHtml]
         public string Description { get; set; }
-
-        [Required(ErrorMessage = "თარიღი დაამატეთ")]
-        public DateTime Published { get; set; }
-
+        
         [Required(ErrorMessage = "აირჩიეთ თეგები")]
         public int[] SelectedTags { get; set; }
 

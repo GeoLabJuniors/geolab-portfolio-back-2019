@@ -70,7 +70,7 @@ SELECT * FROM ProjectImages;
 
 /* bak file */
 
-BACKUP DATABASE GeolabPortfolio TO DISK='D:\baza\GeolabPortfolio.bak'
+BACKUP DATABASE GeolabPortfolio TO DISK='D:\GeolabPortfolio.bak'
 
 select * from Users;
 
@@ -88,6 +88,3 @@ select p.Id,p.Name,a.FirstName,a.LastName,ProjectImages.ImageUrl from Projects a
 join ProjectImages on p.Id = ProjectImages.ProjectId
 join Authors as a on a.Id = p.AuthorId
 where ProjectImages.IsMain = 1
-
-
-

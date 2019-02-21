@@ -47,31 +47,34 @@ namespace GeolabPortfolio.Controllers
                 return RedirectToAction("Index", "Error");
             }
 
-            List<Project> projects = _context.Projects.Where(x => x.AuthorId == Id).ToList();
+            var courses = (from project in _context.Projects.ToList()
+                           join authors in _context.Authors.ToList() on project.AuthorId equals authors.Id
+                           join projectimages in _context.ProjectImages.ToList() on project.Id equals projectimages.ProjectId
+                           where projectimages.IsMain == 1 && project.AuthorId == author.Id
+                           select new ProjectListViewModel
+                           {
+                               Id = project.Id,
+                               Name = project.Name,
+                               Image = projectimages.ImageUrl,
+                               AuthorFullName = authors.FirstName + " " + authors.LastName
+                           }).ToList();
 
-            Dictionary<int, string> TagDictionary = new Dictionary<int, string>();
-
-            foreach (Tag tag in _context.Tags.ToList())
-            {
-                TagDictionary.Add(tag.Id, tag.Name);
-            }
-
-            UserProjectViewModel vm = new UserProjectViewModel
-            {
-                Projects = projects,
-                ProjectTags = _context.ProjectTags.ToList(),
-                TagDictionary = TagDictionary
-            };
-
-            return View(vm);
+            return View(courses);
         }
 
-        public ActionResult Create()
+        public ActionResult Create(int id = 0)
         {
             CreateProjectViewModel vm = new CreateProjectViewModel();
             vm.Authors = _context.Authors.ToList();
             vm.Tags = _context.Tags.ToList();
-            vm.Published = DateTime.Now.Date;
+
+            Author author = _context.Authors.Where(x => x.Id == id).FirstOrDefault();
+
+            if (author != null)
+            {
+                vm.AuthorId = author.Id;
+            }
+
             return View(vm);
         }
 
@@ -82,7 +85,6 @@ namespace GeolabPortfolio.Controllers
             {
                 vm.Authors = _context.Authors.ToList();
                 vm.Tags = _context.Tags.ToList();
-                vm.Published = DateTime.Now.Date;
                 return View(vm);
             }
 
@@ -95,7 +97,6 @@ namespace GeolabPortfolio.Controllers
                     ModelState.AddModelError("error", "არასწორია ფაილის ფორმატი");
                     vm.Authors = _context.Authors.ToList();
                     vm.Tags = _context.Tags.ToList();
-                    vm.Published = DateTime.Now.Date;
                     return View(vm);
                 }
             }
@@ -112,7 +113,7 @@ namespace GeolabPortfolio.Controllers
                         AuthorId = vm.AuthorId,
                         Description = vm.Description,
                         Name = vm.Name,
-                        Published = vm.Published
+                        Published = DateTime.Now
                     };
 
                     _context.Projects.Add(project);
@@ -242,7 +243,6 @@ namespace GeolabPortfolio.Controllers
                 AuthorId = project.AuthorId,
                 Name = project.Name,
                 Description = project.Description,
-                Published = project.Published,
                 Authors = _context.Authors.ToList(),
                 Tags = _context.Tags.ToList(),
                 TagHash = TagHash,
@@ -302,7 +302,6 @@ namespace GeolabPortfolio.Controllers
             project.Name = vm.Name;
             project.Description = vm.Description;
             project.AuthorId = vm.AuthorId;
-            project.Published = vm.Published;
             _context.SaveChanges();
 
             HashSet<int> currentTags = new HashSet<int>();

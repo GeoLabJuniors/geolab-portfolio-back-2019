@@ -15,12 +15,19 @@ namespace GeolabPortfolio.Models
 
             var user = _context.Users.ToList().First();
 
-            string passwordHashed = PasswordHasher.GetHash((string)value);
+            if ((string)value != "" && (string)value != null)
+            {
+                string passwordHashed = PasswordHasher.GetHash((string)value);
 
-            if (user.Password == passwordHashed)
-                return ValidationResult.Success;
+                if (user.Password == passwordHashed)
+                    return ValidationResult.Success;
+                else
+                    return new ValidationResult("მოხმარებლის პაროლი არასწორია");
+            }
             else
-                return new ValidationResult("მოხმარებლის პაროლი არასწორია");
+            {
+                return new ValidationResult("შეიყვანეთ მომხმარებლის პაროლი");
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
@@ -9,6 +8,17 @@
 
 @model CreateProjectViewModel
 
+@{
+    List<string> list = new List<string>();
+    foreach (ModelState modelState in ViewData.ModelState.Values)
+    {
+        foreach (ModelError error in modelState.Errors)
+        {
+            list.Add(error.ErrorMessage);
+        }
+    }
+}
+
 <div class="card mb-3">
     <div class="card-header">
         <i class="fas fa-table"></i>
@@ -17,7 +27,16 @@
     <div class="card-body">
         <div class="col-md-12">
             <form action="~/Project/Create" method="post" enctype="multipart/form-data">
-                @Html.ValidationSummary()
+                
+                @if (list.Count > 0)
+                {
+                    <ul class="alert alert-danger">
+                        @foreach (var item in list)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                }
 
                 <div class="form-row">
                     <div class="form-group col-md-12">
@@ -25,7 +44,14 @@
                         <select class="form-control" name="AuthorId">
                             @foreach (var author in Model.Authors)
                             {
-                                <option value="@author.Id">@author.FirstName @author.LastName</option>
+                                if (Model.AuthorId == author.Id)
+                                {
+                                    <option value="@author.Id" selected>@author.FirstName @author.LastName</option>
+                                }
+                                else
+                                {
+                                    <option value="@author.Id">@author.FirstName @author.LastName</option>
+                                }
                             }
                         </select>
                         @Html.ValidationMessageFor(x => x.AuthorId, "", new { @class = "text-danger" })
@@ -33,15 +59,10 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="inputEmail4">სახელი</label>
                         <input type="text" class="form-control" name="Name" placeholder="სახელი" value="@Model.Name">
                         @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4">თარიღი</label>
-                        <input id="datepicker" class="form-control" name="Published" value="@Model.Published.ToShortDateString()" />
-                        @Html.ValidationMessageFor(x => x.Published, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-row">
@@ -65,16 +86,15 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-12">
-                        <button type="button" class="btn btn-info btn-sm" onclick="newImageButtonHandler()">ახალი სურათი</button>
+                        <button type="button" class="btn btn-info btn-sm" onclick="makeNewUploadInput()">ახალი სურათი</button>
                     </div>
                 </div>
 
-                <div id="images">
-                    @Html.ValidationMessageFor(x => x.Photos, "", new { @class = "text-danger" })
-                </div>
+                <div id="FileUploadGroup"></div>
+                @Html.ValidationMessageFor(x => x.Photos, "", new { @class = "text-danger" })
 
-                <div class="form-group btn-group-sm">
-                    <input type="submit" class="btn btn-success" value="შენახვა" />
+                <div class="form-group btn-group-sm" style="margin-top:20px;">
+                    <input type="submit" class="btn btn-success btn-lg" value="შენახვა" />
                 </div>
             </form>
         </div>
@@ -82,23 +102,13 @@
     </div>
 </div>
 
-<!--time picker library -->
-<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
-<script src="~/Scripts/gijgo.min.js" type="text/javascript"></script>
-<link href="https://unpkg.com/gijgo@1.9.11/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 <!--editor configuration-->
 <script src="~/Scripts/ckeditor.js"></script>
 
 <script type="text/javascript">
-
-    const imagesElement = document.getElementById("images")
     var counter = 0;
     var selected = 0;
-
-    //timepicker configuration
-    $('#datepicker').datepicker({
-        uiLibrary: 'bootstrap4'
-    });
+    var cnt = 0;
 
     //editor configuration
     ClassicEditor
@@ -109,27 +119,23 @@
 
     function radioClick(index) {
         selected = index;
+ //       alert(index);
     }
 
-    function newImageButtonHandler(e) {
-        imagesElement.innerHTML += (`
-            <div class="form-row" id="item`+ counter + `">
-                <div class="form-group col-md-7">
-                    <input type="file" name="Photos" class="form-control" id="file`+ counter + `" onchange="return fileValidation('file` + counter + `')">
-                </div>
-                <div class="form-group col-md-5">
-                    <span>
-                        <input type="radio" name="Primary" id="radio`+ counter + `" class="" value=` + counter + ` onclick="radioClick(` + counter + `)"> მთავარი სურათად ჩვენება
-                    </span>
-                </div>
-            </div>
-        `);
+    function makeNewUploadInput(e) {
+        var div = document.createElement('DIV');
 
-        counter++;
+        div.innerHTML = `
+            <input id = "file` + cnt + `" name = "Photos" type="file" onchange="return fileValidation('file` + counter + `')"/>
+            <input type="radio" name="Primary" id="radio`+ cnt + `" value=` + cnt + ` onclick="radioClick(` + cnt + `)"> მთავარი სურათად ჩვენება`;
+
+        document.getElementById("FileUploadGroup").appendChild(div);
+
         if (selected != -1) {
             var item = document.getElementById("radio" + selected);
             item.checked = true;
         }
+        cnt++;
     }
 
     function fileValidation(filename) {

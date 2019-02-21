@@ -8,6 +8,18 @@
 @using GeolabPortfolio.Models;
 @model EditAuthorViewModel
 
+@{
+    List<string> list = new List<string>();
+    foreach (ModelState modelState in ViewData.ModelState.Values)
+    {
+        foreach (ModelError error in modelState.Errors)
+        {
+            list.Add(error.ErrorMessage);
+        }
+    }
+}
+
+
 
 <div class="card mb-3">
     <div class="card-header">
@@ -20,8 +32,16 @@
 
                 <input type="hidden" value="@Model.Id" name="Id" />
 
-                @Html.ValidationSummary()
- 
+                @if (list.Count > 0)
+                {
+                    <ul class="alert alert-danger">
+                        @foreach (var item in list)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                }
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">სახელი</label>
@@ -47,7 +67,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail4">Github</label>
@@ -74,8 +94,8 @@
                 </div>
                 <div class="form-now">
                     <div class="form-group col-md-12">
-                        <input type="submit" class="btn btn-danger" value="შენახვა"/>
-                    </div> 
+                        <input type="submit" class="btn btn-danger" value="შენახვა" />
+                    </div>
                 </div>
             </form>
         </div>

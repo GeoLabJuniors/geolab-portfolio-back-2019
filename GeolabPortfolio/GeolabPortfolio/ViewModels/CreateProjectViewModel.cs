@@ -15,9 +15,6 @@ namespace GeolabPortfolio.ViewModels
         [Required(ErrorMessage = "სახელის ველი ცარიელია")]
         public string Name { get; set; }
         
-        [Required]
-        public DateTime Published { get; set; }
-
         [Required(ErrorMessage = "აღწერის ველი ცარიელია")]
         [AllowHtml]
         public string Description { get; set; }
