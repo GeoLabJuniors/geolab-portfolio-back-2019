@@ -1,4 +1,6 @@
-﻿namespace GeolabPortfolio.ViewModels
+﻿using System;
+
+namespace GeolabPortfolio.ViewModels
 {
     public class ProjectListViewModel
     {
@@ -6,6 +8,6 @@
         public string Name { get; set; }
         public string Image { get; set; }
         public string AuthorFullName { get; set; }
-
+        public DateTime Published { get; set; }
     }
 }

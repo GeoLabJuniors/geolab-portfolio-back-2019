@@ -84,7 +84,48 @@ truncate table Tags
 truncate table ProjectTags
 truncate table ProjectImages
 
-select p.Id,p.Name,a.FirstName,a.LastName,ProjectImages.ImageUrl from Projects as p
+select p.Id,p.Name,ProjectImages.ImageUrl as [Image],a.FirstName + ' ' + a.LastName as AuthorFullName,p.Published from Projects as p
 join ProjectImages on p.Id = ProjectImages.ProjectId
 join Authors as a on a.Id = p.AuthorId
 where ProjectImages.IsMain = 1
+
+select * FROM ProjectImages
+select * FROM Projects
+select * FROM ProjectTags
+
+go
+create Procedure GetProjectList
+as
+	select p.Id,p.Name,ProjectImages.ImageUrl as [Image],a.FirstName + ' ' + a.LastName as AuthorFullName,p.Published 
+	from Projects as p
+	join ProjectImages on p.Id = ProjectImages.ProjectId
+	join Authors as a on a.Id = p.AuthorId
+	where ProjectImages.IsMain = 1
+go
+
+exec GetProjectList
+
+select distinct(p.id),p.Name,p.Published,CAST(images.ImageUrl AS NVARCHAR(MAX)) as [Image],a.FirstName + a.LastName as AuthorFullName FROM Projects as p
+join ProjectImages as images on p.id = images.ProjectId
+join Authors as a on a.Id = p.AuthorId
+join ProjectTags as t on t.ProjectId = p.Id
+where images.IsMain = 1 and t.TagId in (11,5)
+
+go
+CREATE PROCEDURE FilterProjectByTags
+(
+	@array nvarchar(150)
+) 
+AS   
+	DECLARE @command nvarchar(max);
+	set @command = 'select distinct(p.id),p.Name,p.Published,CAST(images.ImageUrl AS NVARCHAR(MAX)) as [Image],a.FirstName + a.LastName as AuthorFullName FROM Projects as p 
+	join ProjectImages as images on p.id = images.ProjectId
+	join Authors as a on a.Id = p.AuthorId
+	join ProjectTags as t on t.ProjectId = p.Id
+	where images.IsMain = 1 and t.TagId in (' + @array +')';
+	execute (@command);
+GO  
+
+exec FilterProjectByTags '11,5'
+
+select * FROM ProjectTags

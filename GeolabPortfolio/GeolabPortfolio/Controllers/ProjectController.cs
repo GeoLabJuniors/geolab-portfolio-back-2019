@@ -350,7 +350,7 @@ namespace GeolabPortfolio.Controllers
                     _context.SaveChanges();
                 }
             }
-
+            
             if (vm.Photos != null)
             {
                 //vm.Primary = Math.Abs(vm.Primary);
@@ -359,21 +359,32 @@ namespace GeolabPortfolio.Controllers
                 {
                     ProjectImage image = _context.ProjectImages.Where(x => x.ProjectId == project.Id).FirstOrDefault();
                     image.IsMain = 0;
+                    _context.SaveChanges();
 
-                }
-
-
-                for (int i = 0; i < vm.Photos.Length; i++)
-                {
-                    _context.ProjectImages.Add(new ProjectImage
+                    for (int i = 0; i < vm.Photos.Length; i++)
                     {
-                        ProjectId = vm.Id,
-                        IsMain = (vm.Primary < 0 && Math.Abs(vm.Primary) == i + 1) ? (1) : (0),
-                        ImageUrl = UploadFile(vm.Photos[i])
-                    });
+                        _context.ProjectImages.Add(new ProjectImage
+                        {
+                            ProjectId = vm.Id,
+                            IsMain = (Math.Abs(vm.Primary) == i + 1) ? (1) : (0),
+                            ImageUrl = UploadFile(vm.Photos[i])
+                        });
 
+                    }
                 }
-                
+                else {
+                    for (int i = 0; i < vm.Photos.Length; i++)
+                    {
+                        _context.ProjectImages.Add(new ProjectImage
+                        {
+                            ProjectId = vm.Id,
+                            IsMain = 0,
+                            ImageUrl = UploadFile(vm.Photos[i])
+                        });
+
+                    }
+                }
+
                 _context.SaveChanges();
             }
 
@@ -393,7 +404,7 @@ namespace GeolabPortfolio.Controllers
 
         public string UploadFile(HttpPostedFileBase file)
         {
-            string pic = Guid.NewGuid().ToString() + Path.GetFileName(file.FileName);
+            string pic = Guid.NewGuid().ToString() + Path.GetFileName(file.FileName).Replace(" ", string.Empty);
             string path = Path.Combine(Server.MapPath("~/Content/uploads/"), pic);
             file.SaveAs(path);
             return pic;

@@ -1,0 +1,395 @@
+﻿body {
+    background-color: #f4f4f4;
+}
+
+.navbar-brand img {
+    width: 68px;
+    height: 61px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    display: inline-block;
+}
+
+.navbar {
+    line-height: 94px;
+}
+
+.about {
+    width: 150px;
+    height: 61px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    text-align: center;
+    color: #8f68a8;
+    font-size: 12px;
+    line-height: 61px;
+    margin-right: 20px;
+}
+
+.search {
+    width: 65px;
+    height: 61px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    line-height: 61px;
+    cursor: pointer;
+    text-align: center;
+}
+
+    .search img {
+        height: 40px;
+        width: 24px;
+        vertical-align: middle;
+        line-height: 61px;
+    }
+
+.search-div {
+    height: 92px;
+    opacity: 0.5;
+    background-color: #ffffff;
+    margin-bottom: 30px;
+}
+
+.search-input {
+    line-height: 90px;
+    border: none;
+    width: 90%;
+    outline: none;
+}
+
+.search-div img {
+    width: 36.5px;
+    height: 22.5px;
+    cursor: pointer;
+}
+
+.search-div .navbar-right {
+    line-height: 90px;
+    float: right;
+}
+/*.border {
+	background-color: #a28989f0;
+	height: 46px;
+	display: inline-block;
+	width: 1px;
+}*/
+.close {
+    width: 65px;
+    height: 61px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    line-height: 61px;
+    font-size: 42px;
+    margin-top: 15px;
+    display: none;
+}
+
+.tags {
+    width: 65px;
+    height: 28px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+}
+
+    .tags p {
+        color: #8f68a8;
+        line-height: 28px;
+        text-align: center;
+    }
+
+.alltag {
+    display: none;
+}
+
+    .alltag div {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 1%;
+        box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.16);
+        padding: 0 1%;
+        cursor: pointer;
+    }
+
+    .alltag p {
+        color: #8f68a8;
+        line-height: 24px;
+        text-align: center;
+    }
+
+.img-box {
+    opacity: 0.98;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    margin-bottom: 30px;
+}
+
+    .img-box h1 {
+        color: #405089;
+        font-size: 12px;
+        line-height: 15px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+.img-wrapper {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.img-size {
+    width: 100%;
+    visibility: hidden;
+    /*height: 207px;
+ 	width: 235px;*/
+}
+
+.img-box h2 {
+    color: #405089;
+    line-height: 15px;
+    font-size: 12px;
+}
+
+.img-box p {
+    color: #bcbaba;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+footer {
+    line-height: 65px;
+    margin-top: 48px;
+}
+
+.glyphicon1 {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+    color: #405089;
+    transition-delay: 0.2s;
+}
+
+.glyphicon2 {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+    color: #405089;
+    transition-delay: 0.2s;
+}
+
+.glyphicon3 {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+    color: #405089;
+    transition-delay: 0.2s;
+}
+
+.glyphicon-style {
+    width: 27.8px;
+    height: 27.8px;
+    background-color: #8f68a8;
+    border-radius: 50%;
+    line-height: 27px;
+    color: white;
+    cursor: pointer;
+}
+
+.glyphicon1 p {
+    display: none;
+}
+
+.glyphicon2 p {
+    display: none;
+}
+
+.glyphicon1:hover p {
+    display: inline-block;
+}
+
+.glyphicon2:hover p {
+    display: inline-block;
+}
+
+.personal {
+    height: 139px;
+    border-top: 1px solid rgba(0, 0, 0, 0.16);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+    padding-right: 6%;
+    padding-left: 6%;
+}
+
+.personal-img {
+    width: 62px;
+    height: 62px;
+}
+
+.personal-name {
+    color: #405089;
+    font-size: 12px;
+}
+
+.personal-information {
+    margin-top: 2%;
+    width: 130px;
+    text-align: center;
+    display: inline-block;
+}
+
+.social-icon {
+    display: inline-block;
+    line-height: 139px;
+}
+
+.icon1 {
+    background-color: #4176fa;
+    color: #f1f2f2;
+    font-size: 25px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.icon2 {
+    background-color: #f26798;
+    color: #f1f2f2;
+    font-size: 25px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.icon3 {
+    background-color: #007ab9;
+    color: #f1f2f2;
+    font-size: 25px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+.jssorl-009-spin img {
+    animation-name: jssorl-009-spin;
+    animation-duration: 1.6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes jssorl-009-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.about-title {
+    color: #8f68a8;
+    font-size: 25px;
+    margin-left: 25%;
+    line-height: 80px;
+}
+
+.about-text {
+    color: #273c75;
+    font-size: 18px;
+    padding-top: 3%;
+    margin-right: 23%;
+    margin-left: 23%;
+    padding-bottom: 3%;
+}
+
+.col-lg-3 {
+    width: 22%;
+    margin-right: 3%;
+}
+
+    .col-lg-3:nth-child(4), .col-lg-3:nth-child(8) {
+        margin-right: 0px;
+    }
+
+@media screen and (max-width:1200px) {
+    .col-md-6 {
+        width: 44%;
+        margin-right: 5%;
+    }
+
+        .col-md-6:nth-child(4), .col-md-6:nth-child(8) {
+            margin-right: 0px;
+        }
+}
+
+@media screen and (max-width: 780px) {
+    .responsive {
+        padding-left: 7%;
+        padding-right: 7%;
+    }
+
+    .responsive1 {
+        margin-left: 5%;
+    }
+
+    .navbar-right {
+        float: right;
+    }
+
+    .personal-information {
+        width: 100%;
+        display: block;
+    }
+
+    .personal {
+        height: 100%;
+    }
+
+    .nonfloat {
+        float: none;
+        display: block;
+        line-height: 70px;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .col-sm-12 {
+        width: 100%;
+        margin-right: 0px;
+    }
+
+    .responsive {
+        padding-left: 17%;
+        padding-right: 17%;
+    }
+
+    .responsive1 {
+        margin-left: 15%;
+    }
+
+    .about {
+        margin-right: 5px;
+        width: 110px;
+    }
+
+    .search {
+        width: 57px;
+    }
+
+    .about-text {
+        margin-left: 16%;
+        margin-right: 16%;
+        padding-top: 3%;
+    }
+
+    .about-title {
+        margin-left: 20%;
+    }
+}
