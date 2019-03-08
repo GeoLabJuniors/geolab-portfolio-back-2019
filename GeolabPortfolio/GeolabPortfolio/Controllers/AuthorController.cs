@@ -63,7 +63,6 @@ namespace GeolabPortfolio.Controllers
              }
 
              string path = Path.Combine(Server.MapPath("~/Content/uploads/"), pic);
-             // file is uploaded
              vm.Image.SaveAs(path);
              
 

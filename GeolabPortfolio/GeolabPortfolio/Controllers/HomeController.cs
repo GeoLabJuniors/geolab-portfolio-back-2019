@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using GeolabPortfolio.Database;
-using GeolabPortfolio.ViewModels;
+using GeolabPortfolio.Extensions;
+using GeolabPortfolio.Models;
 
 namespace GeolabPortfolio.Controllers
 {
@@ -28,19 +29,31 @@ namespace GeolabPortfolio.Controllers
         [HttpGet]
         public JsonResult FilterProjects(string Tags)
         {
-            Tags = Tags.Replace(' ', ',');
-
-            var projectList = context.Database
-                .SqlQuery<ProjectListViewModel>("exec FilterProjectByTags '" + Tags + "'").ToList();
-
+            var command = "exec FilterProjectByTags '" + Tags.Replace(' ',',') + "'";
+            var projectList = context.Database.SqlQuery<ProjectList>(command).ToList();
             return Json(projectList, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
         public JsonResult ProjectList()
         {
-            var items = context.Database.SqlQuery<ProjectListViewModel>("exec GetProjectList").ToList();
+            var command = "exec GetProjectList";
+            var items = context.Database.SqlQuery<ProjectList>(command).ToList();
             return Json(items, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult FilterProjectListByString(string words)
+        {
+            ProjectFilter filter = new ProjectFilter();
+            return Json(filter.ProjectFilterByText(words), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult FilterProjectListByStringAndTags(string words, string tags)
+        {
+            ProjectFilter filter = new ProjectFilter();
+            return Json(filter.ProjectFilterByTextAndTags(words, tags), JsonRequestBehavior.AllowGet);
+        }        
     }
 }

@@ -126,11 +126,14 @@
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Database\GeolabPortfolioDBContext.cs" />
+    <Compile Include="Extensions\ProjectFilter.cs" />
+    <Compile Include="Extensions\WordSplitter.cs" />
     <Compile Include="Filters\AdminLoginFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Author.cs" />
+    <Compile Include="Models\ProjectList.cs" />
     <Compile Include="Validators\IsAdminPasswordRight.cs" />
     <Compile Include="Validators\IsTagUnique.cs" />
     <Compile Include="Validators\IsAuthorEmailUnique.cs" />

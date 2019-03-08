@@ -17,7 +17,11 @@ namespace GeolabPortfolio.Filters
             if (user == null)
             {
                 context.Result = new RedirectToRouteResult(
-                    new RouteValueDictionary { { "controller", "Account" }, { "action", "Login" } });
+                    new RouteValueDictionary {
+                        { "controller", "Account" },
+                        { "action", "Login" }
+                    }
+                );
             }
         }
     }

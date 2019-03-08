@@ -23,10 +23,9 @@
                 <img src="~/Content/img/geolab-logo.svg" alt="geolab-logo">
             </a>
 
-
             <ul class="list-inline navbar-right">
                 <li class="about"><a href="~/Home/About">პროექტის შესახებ</a></li>
-                <button type="button" class="close close-search-div">×</button>
+                <button class="close close-search-div">×</button>
                 <li class="search" id="search"><img src="~/Content/img/searchIcon.svg" alt="search"></li>
             </ul>
 
@@ -36,7 +35,7 @@
     <div class="search-div" id="searchdiv" style="display: none;">
         <div class="container">
 
-            <input type="text border" placeholder="ძებნა" class="search-input">
+            <input type="text" placeholder="ძებნა" class="search-input" onkeyup="changeText()" id="SearchText">
             <!-- <div class="border"></div> -->
             <div class="navbar-right">
                 <img src="~/Content/img/searchIcon.svg" alt="search">
@@ -53,7 +52,7 @@
 
             @foreach (var tag in ViewBag.Tags)
             {
-                <div>
+                <div id="TagDiv_@tag.Id">
                     <p onClick="clickTag('@tag.Id')" id="Tag_@tag.Id">#@tag.Name</p>
                 </div>
             }
@@ -104,18 +103,20 @@
 
         function clickTag(id) {
             const tag = document.getElementById("Tag_" + id);
+            const tagDiv = document.getElementById("TagDiv_"+id)
             if (selectedTags.has(id)) {
                 selectedTags.delete(id);
-                tag.style.background = "#f4f4f4";
+                tagDiv.style.background="#f4f4f4"
                 tag.style.color = "#8f68a8";
                 if (selectedTags.size == 0) {
                     clearProjectList();
+                    onInit()
                 } else {
                     ajaxCall();
                 }
             } else {
                 selectedTags.add(id);
-                tag.style.background = "#8f68a8";
+                tagDiv.style.background = "#8f68a8";
                 tag.style.color = "#f4f4f4";
                 ajaxCall();
             }
@@ -149,6 +150,11 @@
             var baseUrl = document.location.origin;
             var projectListDocument = document.getElementById("ProjectList")
             projectListDocument.innerHTML = "";
+
+            data.forEach(function (item,index) {
+                item.Published = new Date(parseInt(item.Published.substr(6))).toLocaleDateString();
+            })
+
             for (var i = 0; i < data.length; i++) {
                 projectListDocument.innerHTML += (`
                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12  img-box">
@@ -158,8 +164,8 @@
                                      <img src="`+ baseUrl + `/Content/Uploads/` + data[i].Image + `" alt="`+data[i].Name+`" class="img-size">
                                 </div>
                             </a>
-                            <a href="personal-page.html"><h2>`+ data[i].AuthorFullName + `</h2></a>
-                            <p>13/11/18</p>
+                            <a href="personal-page.html"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
+                            <p>`+ data[i].Published +`</p>
                         </div>`);
             }
         }
@@ -167,6 +173,43 @@
         function clearProjectList() {
             var projectListDocument = document.getElementById("ProjectList")
             projectListDocument.innerHTML = "";
+        }
+
+        function changeText() {
+            const text = document.getElementById("SearchText").value;
+            if (text[text.length - 1] != ' ') {
+
+                if (selectedTags.size == 0) {
+                    $.get('/home/FilterProjectListByString', { words: text }, function (data) {
+                        RefreshProjectList(data);
+                        console.log(data)
+                    });
+                }
+                else
+                {
+                    var tagString = "";
+
+                    selectedTags.forEach(function (value) {
+                        if (tagString == "") {
+                            tagString += value;
+                        } else {
+                            tagString += " " + value;
+                        }
+                    })
+
+                    if (text != "") {
+                        $.get('/home/FilterProjectListByStringAndTags', { words: text, tags: tagString }, function (data) {
+                            RefreshProjectList(data);
+                            console.log(data)
+                        });
+                    } else {
+                        $.get('/home/FilterProjects', { Tags: tagString }, function (data) {
+                            console.log(data);
+                            RefreshProjectList(data);
+                        });
+                    }
+                }          
+            }
         }
 
         onInit();
