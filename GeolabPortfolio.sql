@@ -63,7 +63,6 @@ CREATE TABLE ProjectImages(
 	IsMain int not null
 )
 
-
 INSERT INTO Users([Email],[Password]) VALUES ('sandro.mirianashvili@geolab.edu.ge','F7C3BC1D808E04732ADF679965CCC34CA7AE3441')
 
 SELECT * FROM ProjectImages;
@@ -96,7 +95,7 @@ select * FROM ProjectTags
 go
 create Procedure GetProjectList
 as
-	select p.Id,p.Name,ProjectImages.ImageUrl as [Image],a.FirstName,a.LastName,p.Published 
+	select p.Id,p.Name,ProjectImages.ImageUrl as [Image],a.FirstName,a.LastName,p.Published,a.Id as AuthorId 
 	from Projects as p
 	join ProjectImages on p.Id = ProjectImages.ProjectId
 	join Authors as a on a.Id = p.AuthorId
@@ -112,6 +111,35 @@ join ProjectTags as t on t.ProjectId = p.Id
 where images.IsMain = 1 and p.id in (30,31)
 
 go
+create procedure FilterProjectByTags(
+	@array nvarchar(150)
+)
+as
+	DECLARE @command nvarchar(max);
+	set @command = 'select distinct(p.id),p.Name,p.Published,CAST(images.ImageUrl AS NVARCHAR(MAX)) as [Image],a.FirstName,a.LastName,a.Id as AuthorId FROM Projects as p 
+	join ProjectImages as images on p.id = images.ProjectId
+	join Authors as a on a.Id = p.AuthorId
+	join ProjectTags as t on t.ProjectId = p.Id
+	where images.IsMain = 1 and t.TagId in (' + @array +')';
+	execute (@command);
+go
+
+
+go
+create procedure FilterProjectByProjectId(
+	@array nvarchar(150)
+)
+as
+	DECLARE @command nvarchar(max);
+	set @command = 'select distinct(p.id),p.Name,p.Published,CAST(images.ImageUrl AS NVARCHAR(MAX)) as [Image],a.FirstName,a.LastName,a.Id as AuthorId FROM Projects as p 
+	join ProjectImages as images on p.id = images.ProjectId
+	join Authors as a on a.Id = p.AuthorId
+	join ProjectTags as t on t.ProjectId = p.Id
+	where images.IsMain = 1 and p.Id in (' + @array +')';
+	execute (@command);
+go
+
+go
 CREATE PROCEDURE FilterProjectByProjectIdAndTags
 (
 	@ids nvarchar(150),
@@ -119,7 +147,7 @@ CREATE PROCEDURE FilterProjectByProjectIdAndTags
 ) 
 AS   
 	DECLARE @command nvarchar(max);
-	set @command = 'select distinct(p.id),p.Name,p.Published,CAST(images.ImageUrl AS NVARCHAR(MAX)) as [Image],a.FirstName,a.LastName FROM Projects as p 
+	set @command = 'select distinct(p.id),p.Name,p.Published,CAST(images.ImageUrl AS NVARCHAR(MAX)) as [Image],a.FirstName,a.LastName,a.Id as AuthorId FROM Projects as p 
 	join ProjectImages as images on p.id = images.ProjectId
 	join Authors as a on a.Id = p.AuthorId
 	join ProjectTags as t on t.ProjectId = p.Id
@@ -127,11 +155,27 @@ AS
 	execute (@command);
 GO  
 
+go
+create procedure FilterProjectByAuthorId(
+	@id int
+)
+as
+	select p.Id,p.Name,ProjectImages.ImageUrl as [Image],a.FirstName,a.LastName,p.Published,a.Id as AuthorId 
+	from Projects as p
+	join ProjectImages on p.Id = ProjectImages.ProjectId
+	join Authors as a on a.Id = p.AuthorId
+	where ProjectImages.IsMain = 1 and a.Id = @id
+go
+
+
 exec FilterProjectByTags '11,5'
 exec FilterProjectByProjectId '31,30'
 exec FilterProjectByProjectIdAndTags '12','2'
 exec GetProjectList
+exec FilterProjectByAuthorId 4
 
 
 
 select * FROM ProjectTags
+
+select * from Authors

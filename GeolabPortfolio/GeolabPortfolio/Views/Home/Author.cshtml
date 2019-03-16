@@ -1,0 +1,174 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@ViewBag.Author.FirstName @ViewBag.Author.LastName პორტფოლიო</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="~/content/css/style.css">
+
+</head>
+<body class="fluid-container">
+    <header class="navbar container ">
+        <nav>
+            <a href="/" class="navbar-brand">
+                <img src="~/Content/img/geolab-logo.svg" alt="geolab-logo">
+            </a>
+            <ul class="list-inline navbar-right">
+                <li class="about"><a href="about.html">პროექტის შესახებ</a></li>
+                <button type="button" class="close close-search-div">×</button>
+                <li class="search" id="search"><img src="~/Content/img/searchIcon.svg" alt="search"></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="search-div" id="searchdiv" style="display: none;">
+        <div class="container">
+            <input type="text border" placeholder="ძებნა" class="search-input" id="SearchInput">
+            <!-- <div class="border"></div> -->
+            <div class="navbar-right">
+                <img src="~/Content/img/searchIcon.svg" alt="search">
+            </div>
+        </div>
+
+    </div>
+
+
+    <section class="personal">
+        <div class="container">
+            <div class="personal-information">
+                <div class="img-wrapper rounded-circle personal-img" style="background-image: url(/content/uploads/@ViewBag.Author.Image);">
+                    <img src="~/Content/Uploads/@ViewBag.Author.Image" style="width: 100%;border-radius:100%;">
+                </div>
+                <h1 class="personal-name">@ViewBag.Author.FirstName @ViewBag.Author.LastName</h1>
+            </div>
+
+            <input type="hidden" id="AuthorId"  value="@ViewBag.Author.Id"/>
+
+            <div class="social-icon navbar-right nonfloat">
+
+                @if (ViewBag.Author.LinkedinLink != null)
+                {
+                    <a href="@ViewBag.Author.LinkedinLink" target="_blank">
+                        <i class="fab fa-linkedin icon3"></i>
+                    </a>
+                }
+
+                @if (ViewBag.Author.GithubLink != null)
+                {
+                    <a href="@ViewBag.Author.GithubLink" target="_blank">
+                        <i class="fab fa-github icon3"></i>
+                    </a>
+                }
+
+                @if (ViewBag.Author.BehanceLink != null)
+                {
+                    <a href="@ViewBag.Author.BehanceLink" target="_blank">
+                        <i class="fab fa-behance icon3"></i>
+                    </a>
+                }
+
+                @if (ViewBag.Author.DribbleLink != null)
+                {
+                    <a href="@ViewBag.Author.DribbleLink" target="_blank">
+                        <i class="fab fa-dribbble icon3"></i>
+                    </a>
+                }
+
+            </div>
+        </div>
+    </section>
+
+    <section class="container responsive" style="margin-top:40px;">
+        <div class="row" id="ProjectList">
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container responsive">
+            <div class="navbar-right">
+                <div class=" glyphicon1">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-earphone glyphicon-style" aria-hidden="true"></span>
+                    </a>
+                    <p>(032) 2 00 00 00</p>
+                </div>
+                <div class="glyphicon2">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-envelope glyphicon-style"></span>
+                    </a>
+                    <p>info@geolab.edu.ge</p>
+                </div>
+                <div class="glyphicon3">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-map-marker glyphicon-style" aria-hidden="true"></span>
+                    </a>
+                </div>
+                <div class="glyphicon3">
+                    <a href="https://www.facebook.com/GeoLabEdu/">
+                        <span class="fab fa-facebook glyphicon-style"></span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <script src="~/Scripts/index.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const id = document.getElementById("AuthorId");
+            const ProjectListDom = document.getElementById("ProjectList");
+            var myData;
+            $.get('/api/GetProjectByAuthorId', { id: id.value }, function (data) {
+                myData = data;
+                updateProjectList(data);
+            })
+
+            $('#SearchInput').keyup(function () {
+                const value = $(this).val().toLocaleLowerCase();
+                if (value == "") {
+                    updateProjectList(myData);
+                } else {
+                    const filteredList = myData.filter(function (project) {
+                        return project.Name.toLowerCase().includes(value)
+                    })
+
+                    updateProjectList(filteredList);
+                }
+                
+            })
+
+            function updateProjectList(data) {
+                ProjectListDom.innerHTML = "";
+                data.forEach(function (item, index) {
+                    item.Published = new Date(parseInt(item.Published.substr(6))).toLocaleDateString();
+                })
+                for (var i = 0; i < data.length; i++) {
+                    ProjectListDom.innerHTML += `
+                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12  img-box">
+                            <a href="#">
+                                <h1>` + data[i].Name + `</h1>
+                                <div class="img-wrapper" style="background-image: url(/Content/uploads/`+ data[i].Image + `);">
+                                    <img src="/Content/Uploads/`+ data[i].Image + `" alt="img" class=" img-size">
+                                </div>
+                            </a>
+                            <a href="/Home/Author/`+ data[i].AuthorId +`"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
+                            <p>`+ data[i].Published + `</p>
+                        </div>
+                    `;
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using GeolabPortfolio.Database;
-using GeolabPortfolio.Extensions;
 using GeolabPortfolio.Models;
 
 namespace GeolabPortfolio.Controllers
@@ -21,39 +20,22 @@ namespace GeolabPortfolio.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Author(int id)
         {
+            Author author = context.Authors.Where(x => x.Id == id).FirstOrDefault();
+
+            if (author == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
+            ViewBag.Author = author;
             return View();
         }
 
-        [HttpGet]
-        public JsonResult FilterProjects(string Tags)
+        public ActionResult About()
         {
-            var command = "exec FilterProjectByTags '" + Tags.Replace(' ',',') + "'";
-            var projectList = context.Database.SqlQuery<ProjectList>(command).ToList();
-            return Json(projectList, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult ProjectList()
-        {
-            var command = "exec GetProjectList";
-            var items = context.Database.SqlQuery<ProjectList>(command).ToList();
-            return Json(items, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult FilterProjectListByString(string words)
-        {
-            ProjectFilter filter = new ProjectFilter();
-            return Json(filter.ProjectFilterByText(words), JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult FilterProjectListByStringAndTags(string words, string tags)
-        {
-            ProjectFilter filter = new ProjectFilter();
-            return Json(filter.ProjectFilterByTextAndTags(words, tags), JsonRequestBehavior.AllowGet);
-        }        
+            return View();
+        }      
     }
 }

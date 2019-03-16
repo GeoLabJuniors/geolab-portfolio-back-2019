@@ -98,7 +98,6 @@
     <script src="~/Scripts/index.js"></script>
 
     <script>
-
         var selectedTags = new Set();
 
         function clickTag(id) {
@@ -134,14 +133,14 @@
                 }
             })
 
-            $.get('/home/FilterProjects', { Tags: tagString }, function (data) {
+            $.get('/api/FilterProjects', { Tags: tagString }, function (data) {
                 console.log(data);
                 RefreshProjectList(data);
             });
         }
 
         function onInit() {
-            $.get('/home/ProjectList', {}, function (data) {
+            $.get('/api/ProjectList', {}, function (data) {
                 RefreshProjectList(data);
             });
         }
@@ -164,7 +163,7 @@
                                      <img src="`+ baseUrl + `/Content/Uploads/` + data[i].Image + `" alt="`+data[i].Name+`" class="img-size">
                                 </div>
                             </a>
-                            <a href="personal-page.html"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
+                            <a href="/Home/Author/`+data[i].AuthorId+`"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
                             <p>`+ data[i].Published +`</p>
                         </div>`);
             }
@@ -180,7 +179,7 @@
             if (text[text.length - 1] != ' ') {
 
                 if (selectedTags.size == 0) {
-                    $.get('/home/FilterProjectListByString', { words: text }, function (data) {
+                    $.get('/api/FilterProjectListByString', { words: text }, function (data) {
                         RefreshProjectList(data);
                         console.log(data)
                     });
@@ -198,12 +197,12 @@
                     })
 
                     if (text != "") {
-                        $.get('/home/FilterProjectListByStringAndTags', { words: text, tags: tagString }, function (data) {
+                        $.get('/api/FilterProjectListByStringAndTags', { words: text, tags: tagString }, function (data) {
                             RefreshProjectList(data);
                             console.log(data)
                         });
                     } else {
-                        $.get('/home/FilterProjects', { Tags: tagString }, function (data) {
+                        $.get('/api/FilterProjects', { Tags: tagString }, function (data) {
                             console.log(data);
                             RefreshProjectList(data);
                         });

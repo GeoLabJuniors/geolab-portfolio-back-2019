@@ -10,5 +10,6 @@ namespace GeolabPortfolio.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Published { get; set; }
+        public int AuthorId { get; set; }
     }
 }
