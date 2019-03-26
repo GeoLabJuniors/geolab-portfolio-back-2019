@@ -157,7 +157,7 @@
             for (var i = 0; i < data.length; i++) {
                 projectListDocument.innerHTML += (`
                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12  img-box">
-                            <a href="personal-page.html">
+                            <a href="/Home/Project/`+data[i].Id+`">
                                 <h1>`+ data[i].Name + `</h1>
                                 <div class="img-wrapper" style="background-image: url(`+ baseUrl + `/Content/Uploads/` + data[i].Image + `);">
                                      <img src="`+ baseUrl + `/Content/Uploads/` + data[i].Image + `" alt="`+data[i].Name+`" class="img-size">

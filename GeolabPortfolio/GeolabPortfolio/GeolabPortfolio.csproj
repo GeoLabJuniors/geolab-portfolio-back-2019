@@ -149,6 +149,7 @@
     <Compile Include="ViewModels\EditAuthorViewModel.cs" />
     <Compile Include="ViewModels\EditProjectViewModel.cs" />
     <Compile Include="ViewModels\EditTagViewModel.cs" />
+    <Compile Include="ViewModels\HomeProjectDetailsViewModel.cs" />
     <Compile Include="ViewModels\ProjectDetailsViewModel.cs" />
     <Compile Include="ViewModels\ProjectListViewModel.cs" />
     <Compile Include="ViewModels\UserLoginViewModel.cs" />
@@ -183,6 +184,8 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Project\Edit.cshtml" />
     <Content Include="Views\Home\Author.cshtml" />
+    <Content Include="Views\Home\Project.cshtml" />
+    <Content Include="Scripts\jssor.slider-27.5.0.min.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

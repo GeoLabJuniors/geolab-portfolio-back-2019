@@ -155,7 +155,7 @@
                 for (var i = 0; i < data.length; i++) {
                     ProjectListDom.innerHTML += `
                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12  img-box">
-                            <a href="#">
+                            <a href="/Home/Project/`+data[i].Id+`">
                                 <h1>` + data[i].Name + `</h1>
                                 <div class="img-wrapper" style="background-image: url(/Content/uploads/`+ data[i].Image + `);">
                                     <img src="/Content/Uploads/`+ data[i].Image + `" alt="img" class=" img-size">

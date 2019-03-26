@@ -11,13 +11,22 @@ $(".close").click(function () {
     $(this).css({ "display": "none" });
 
 });
-
 $(".tags").click(function () {
     $(".alltag").css({ "display": "block" });
     $(this).css({ "display": "none" });
 
 });
 
+$("#slide-show").click(function () {
+    $(".hide-slider").css({ "display": "block" });
+    $(".slider").css({ "display": "none" });
+
+});
+
+// $("#slide-show").click(function)() {
+//     $(".hide-slider").css({"display":"block"});
+//     $(".slider").css({"display":"none"});
+// });
 jssor_1_slider_init = function () {
 
     var jssor_1_options = {
