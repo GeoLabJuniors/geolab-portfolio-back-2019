@@ -5,9 +5,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>ჯეოლაბის პორტფოლიო</title>
+    <title>Geolab Portfolio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="Portfolio of Geolab team">
+    <meta name="keywords" content="პორტფოლიო, ჯეოლაბი, ფრილანსერი, დიზაინერი, პროგრამისტი, portfolio, geolab">
+    <meta name='author' content='Anano Aspanidze (მელა) - anano.aspanidze@geolab.edu.ge'>
+    <link rel="icon" href="~/Content/img/logo.ico">
+
+
+
+    <!-- fb og tags  -->
+    <meta property="og:title" content="ჯეოლაბი პორტფოლიო" />
+    <meta property="og:description" content="ვებგვერდი, რომელიც აერთიანებს ჯეოლაბელების პორტფოლიოებს." />
+    <!-- <meta property="fb:app_id" content="" />-->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://portfolio.geolab.edu.ge/" />
+    <meta property="og:image" content="http://portfolio.geolab.edu.ge/images/logo.png" />
+
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -24,7 +41,7 @@
             </a>
 
             <ul class="list-inline navbar-right">
-                <li class="about"><a href="~/Home/About">პროექტის შესახებ</a></li>
+                <li class="about"><a href="~/Home/About">About the Project</a></li>
                 <button class="close close-search-div">×</button>
                 <li class="search" id="search"><img src="~/Content/img/searchIcon.svg" alt="search"></li>
             </ul>
@@ -35,7 +52,7 @@
     <div class="search-div" id="searchdiv" style="display: none;">
         <div class="container">
 
-            <input type="text" placeholder="ძებნა" class="search-input" onkeyup="changeText()" id="SearchText">
+            <input type="text" placeholder="search" class="search-input" onkeyup="changeText()" id="SearchText">
             <!-- <div class="border"></div> -->
             <div class="navbar-right">
                 <img src="~/Content/img/searchIcon.svg" alt="search">
@@ -46,7 +63,7 @@
 
 
     <section class="container responsive1" style="padding-left: 0px;">
-        <div class="tags"><p>თეგები</p></div>
+        <div class="tags"><p>Tags</p></div>
 
         <div class="alltag">
 
@@ -72,7 +89,7 @@
                 <a href="#">
                     <span class="glyphicon glyphicon-earphone glyphicon-style" aria-hidden="true"></span>
                 </a>
-                <p>(032) 2 00 00 00</p>
+                <p>577 67 04 04</p>
             </div>
             <div class="glyphicon2">
                 <a href="#">
@@ -81,12 +98,12 @@
                 <p>info@geolab.edu.ge</p>
             </div>
             <div class="glyphicon3">
-                <a href="#">
+                <a href="https://www.google.com/maps?ll=41.718195,44.782809&z=17&t=m&hl=en-US&gl=GE&mapclient=embed&cid=14902793988033662645" target="_blank">
                     <span class="glyphicon glyphicon-map-marker glyphicon-style" aria-hidden="true"></span>
                 </a>
             </div>
             <div class="glyphicon3">
-                <a href="https://www.facebook.com/GeoLabEdu/">
+                <a href="https://www.facebook.com/GeoLabEdu/" target="_blank">
                     <span class="fab fa-facebook glyphicon-style"></span>
                 </a>
             </div>
@@ -163,9 +180,11 @@
                                      <img src="`+ baseUrl + `/Content/Uploads/` + data[i].Image + `" alt="`+data[i].Name+`" class="img-size">
                                 </div>
                             </a>
-                            <a href="/Home/Author/`+data[i].AuthorId+`"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
+                            <a href="#"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
                             <p>`+ data[i].Published +`</p>
                         </div>`);
+
+                //  ----  /Home/Author/`+data[i].AuthorId+`
             }
         }
 

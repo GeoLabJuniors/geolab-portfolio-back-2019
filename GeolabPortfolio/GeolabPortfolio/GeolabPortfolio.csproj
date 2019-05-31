@@ -98,6 +98,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap4.min.css" />
+    <Content Include="Content\img\logo.ico" />
     <Content Include="Content\css\style.css" />
     <Content Include="Content\error.css" />
     <Content Include="Content\login.css" />
@@ -186,6 +187,7 @@
     <Content Include="Views\Home\Author.cshtml" />
     <Content Include="Views\Home\Project.cshtml" />
     <Content Include="Scripts\jssor.slider-27.5.0.min.js" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -195,7 +197,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\img\" />
     <Folder Include="Content\Uploads\" />
     <Folder Include="Views\Api\" />
   </ItemGroup>

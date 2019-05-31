@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.Models;
+@using GeolabPortfolio.ViewModels;
+@model AuthorDetailsViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        დეტალურად Geolab-ელი
+    </div>
+    <div class="card-body">
+        <div class="col-md-12">
+
+            <a href="~/Project/Create/@Model.author.Id" class="btn btn-danger" style="margin-bottom:10px;">ახალი პროექტი</a>
+
+            <table class="table table-bordered">
+                <tr>
+                    <td>Id</td>
+                    <td>@Model.author.Id</td>
+                </tr>
+                <tr>
+                    <td>სახელი</td>
+                    <td>@Model.author.FirstName</td>
+                </tr>
+                <tr>
+                    <td>გვარი</td>
+                    <td>@Model.author.LastName</td>
+                </tr>
+                <tr>
+                    <td>ელ.ფოსტა</td>
+                    <td>@Model.author.Email</td>
+                </tr>
+                <tr>
+                    <td>სურათი</td>
+                    <td>
+                        <img src="~/Content/Uploads/@Model.author.Image" class="img-thumbnail" style="width:100px;" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        ლინკები
+                    </td>
+                    <td>
+
+                        @if (Model.author.GithubLink != null)
+                        {
+                            <a href="@Model.author.GithubLink" class="btn btn-danger" target="_blank">
+                                <i class="fab fa-github"></i> Github
+                            </a>
+                        }
+
+                        @if (Model.author.LinkedinLink != null)
+                        {
+                            <a href="@Model.author.LinkedinLink" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-linkedin"></i> Linkedin
+                            </a>
+                        }
+
+                        @if (Model.author.DribbleLink != null)
+                        {
+                            <a href="@Model.author.DribbleLink" class="btn btn-success" target="_blank">
+                                <i class="fab fa-dribbble"></i> Dribble
+                            </a>
+                        }
+
+                        @if (Model.author.BehanceLink != null)
+                        {
+                            <a href="@Model.author.BehanceLink" class="btn btn-info" target="_blank">
+                                <i class="fab fa-behance"></i> Behance
+                            </a>
+                        }
+
+
+                    </td>
+                </tr>
+
+            </table>
+
+            <table class="table table-bordered" id="dataTable" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>სურათი</th>
+                        <th>სახელი</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ProjectListViewModel entity in Model.Courses)
+                    {
+                        <tr>
+                            <td>
+                                <img src="~/Content/Uploads/@entity.Image" class="img-thumbnail" style="width:100px" />
+                            </td>
+                            <td>@entity.Name</td>
+                            <td>
+                                <!--<a href="~/Project/Details/@entity.Id" class="btn btn-danger">დეტალურად</a>-->
+                                <div class="btn-group pull-right" role="group" aria-label="Basic example">
+                                    <a href="~/Project/Details/@entity.Id" class="btn btn-secondary">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a href="~/Project/Edit/@entity.Id" class="btn btn-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#Delete_@entity.Id">
+                                        <i class="fas fa-trash fa-sm fa-fw mr-2"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!--Delete Dialog-->
+                        <div class="modal fade" id="Delete_@entity.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">წაშლა</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">დარწმუნებული ხართ, რომ გსურთ წაშლა?</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">არა</button>
+                                        <a class="btn btn-primary" href="~/Project/Remove/@entity.Id">დიახ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

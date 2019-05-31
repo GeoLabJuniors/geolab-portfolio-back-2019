@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.Models
+@model IEnumerable<Author>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        ჯეოლაბელები
+    </div>
+    <div class="card-body">
+        <a href="~/Author/Create" class="btn btn-danger">ახალი ჯეოლაბელი</a>
+        <div class="table-responsive" style="margin-top:15px;">
+            <table class="table table-bordered" id="dataTable" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ფოტო</th>
+                        <th>სახელი</th>
+                        <th>გვარი</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Author t in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="~/Author/Details/@t.Id">
+                                    <img src="~/Content/Uploads/@t.Image" class="img-thumbnail" width="100" alt="@t.FirstName + @t.LastName" />
+                                </a>
+                            </td>
+                            <td>@t.FirstName</td>
+                            <td>@t.LastName</td>
+                            <td>
+                                <div class="btn-group pull-right" role="group" aria-label="Basic example">
+                                    <a href="~/Author/Details/@t.Id" class="btn btn-secondary">
+                                        <i class="fas fa-user"></i>
+                                    </a>
+                                    <a href="~/Author/Edit/@t.Id" class="btn btn-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#Delete_@t.Id">
+                                        <i class="fas fa-trash fa-sm fa-fw mr-2"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <!--Delete Dialog-->
+                        <div class="modal fade" id="Delete_@t.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">წაშლა</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">დარწმუნებული ხართ, რომ გსურთ წაშლა?</div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">არა</button>
+                                        <a class="btn btn-primary" href="~/Author/Remove/@t.Id">დიახ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

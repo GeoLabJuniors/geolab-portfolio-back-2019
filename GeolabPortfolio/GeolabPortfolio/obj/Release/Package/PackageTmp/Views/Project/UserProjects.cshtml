@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "UserProjects";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using GeolabPortfolio.ViewModels;
+@using GeolabPortfolio.Models;
+@model List<ProjectListViewModel>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        ჯეოლაბელის პროექტები
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td>სურათი</td>
+                    <td>სახელი</td>
+                    <td>#</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ProjectListViewModel project in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="~/Content/Uploads/@project.Image" class="img-thumbnail" style="width:100px" />
+                        </td>
+                        <td>@project.Name</td>
+                        <td>
+                            <div class="btn-group pull-right" role="group" aria-label="Basic example">
+                                <a href="~/Project/Details/@project.Id" class="btn btn-secondary">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a href="~/Project/Edit/@project.Id" class="btn btn-secondary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#Delete_@project.Id">
+                                    <i class="fas fa-trash fa-sm fa-fw mr-2"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="Delete_@project.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">წაშლა</h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">დარწმუნებული ხართ, რომ გსურთ წაშლა?</div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">არა</button>
+                                    <a class="btn btn-primary" href="~/Project/Remove/@project.Id">დიახ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

@@ -1,0 +1,238 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Geolab Portfolio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="Portfolio of Geolab team">
+    <meta name="keywords" content="პორტფოლიო, ჯეოლაბი, ფრილანსერი, დიზაინერი, პროგრამისტი, portfolio, geolab">
+    <meta name='author' content='Anano Aspanidze (მელა) - anano.aspanidze@geolab.edu.ge'>
+    <link rel="icon" href="~/Content/img/logo.ico">
+
+
+
+    <!-- fb og tags  -->
+    <meta property="og:title" content="ჯეოლაბი პორტფოლიო" />
+    <meta property="og:description" content="ვებგვერდი, რომელიც აერთიანებს ჯეოლაბელების პორტფოლიოებს." />
+    <!-- <meta property="fb:app_id" content="" />-->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://portfolio.geolab.edu.ge/" />
+    <meta property="og:image" content="http://portfolio.geolab.edu.ge/images/logo.png" />
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/css/style.css">
+
+</head>
+<body class="fluid-container">
+    <header class="navbar container ">
+        <nav>
+            <a href="/" class="navbar-brand">
+                <img src="~/Content/img/geolab-logo.svg" alt="geolab-logo">
+            </a>
+
+            <ul class="list-inline navbar-right">
+                <li class="about"><a href="~/Home/About">About the Project</a></li>
+                <button class="close close-search-div">×</button>
+                <li class="search" id="search"><img src="~/Content/img/searchIcon.svg" alt="search"></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <div class="search-div" id="searchdiv" style="display: none;">
+        <div class="container">
+
+            <input type="text" placeholder="search" class="search-input" onkeyup="changeText()" id="SearchText">
+            <!-- <div class="border"></div> -->
+            <div class="navbar-right">
+                <img src="~/Content/img/searchIcon.svg" alt="search">
+            </div>
+        </div>
+
+    </div>
+
+
+    <section class="container responsive1" style="padding-left: 0px;">
+        <div class="tags"><p>Tags</p></div>
+
+        <div class="alltag">
+
+            @foreach (var tag in ViewBag.Tags)
+            {
+                <div id="TagDiv_@tag.Id">
+                    <p onClick="clickTag('@tag.Id')" id="Tag_@tag.Id">#@tag.Name</p>
+                </div>
+            }
+
+        </div>
+
+    </section>
+
+    <section class="container responsive" style="margin-top:40px;">
+        <div class="row" id="ProjectList"></div>
+    </section>
+
+
+    <footer class="container responsive">
+        <div class="navbar-right">
+            <div class=" glyphicon1">
+                <a href="#">
+                    <span class="glyphicon glyphicon-earphone glyphicon-style" aria-hidden="true"></span>
+                </a>
+                <p>577 67 04 04</p>
+            </div>
+            <div class="glyphicon2">
+                <a href="#">
+                    <span class="glyphicon glyphicon-envelope glyphicon-style"></span>
+                </a>
+                <p>info@geolab.edu.ge</p>
+            </div>
+            <div class="glyphicon3">
+                <a href="https://www.google.com/maps?ll=41.718195,44.782809&z=17&t=m&hl=en-US&gl=GE&mapclient=embed&cid=14902793988033662645" target="_blank">
+                    <span class="glyphicon glyphicon-map-marker glyphicon-style" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="glyphicon3">
+                <a href="https://www.facebook.com/GeoLabEdu/" target="_blank">
+                    <span class="fab fa-facebook glyphicon-style"></span>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <script src="~/Scripts/json-slider.min.js"></script>
+    <script src="~/Scripts/index.js"></script>
+
+    <script>
+        var selectedTags = new Set();
+
+        function clickTag(id) {
+            const tag = document.getElementById("Tag_" + id);
+            const tagDiv = document.getElementById("TagDiv_"+id)
+            if (selectedTags.has(id)) {
+                selectedTags.delete(id);
+                tagDiv.style.background="#f4f4f4"
+                tag.style.color = "#8f68a8";
+                if (selectedTags.size == 0) {
+                    clearProjectList();
+                    onInit()
+                } else {
+                    ajaxCall();
+                }
+            } else {
+                selectedTags.add(id);
+                tagDiv.style.background = "#8f68a8";
+                tag.style.color = "#f4f4f4";
+                ajaxCall();
+            }
+            
+        }
+
+        function ajaxCall() {
+            var tagString = "";
+
+            selectedTags.forEach(function (value) {
+                if (tagString == "") {
+                    tagString += value;
+                } else {
+                    tagString += " " + value;
+                }
+            })
+
+            $.get('/api/FilterProjects', { Tags: tagString }, function (data) {
+                console.log(data);
+                RefreshProjectList(data);
+            });
+        }
+
+        function onInit() {
+            $.get('/api/ProjectList', {}, function (data) {
+                RefreshProjectList(data);
+            });
+        }
+
+        function RefreshProjectList(data) {
+            var baseUrl = document.location.origin;
+            var projectListDocument = document.getElementById("ProjectList")
+            projectListDocument.innerHTML = "";
+
+            data.forEach(function (item,index) {
+                item.Published = new Date(parseInt(item.Published.substr(6))).toLocaleDateString();
+            })
+
+            for (var i = 0; i < data.length; i++) {
+                projectListDocument.innerHTML += (`
+                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12  img-box">
+                            <a href="/Home/Project/`+data[i].Id+`">
+                                <h1>`+ data[i].Name + `</h1>
+                                <div class="img-wrapper" style="background-image: url(`+ baseUrl + `/Content/Uploads/` + data[i].Image + `);">
+                                     <img src="`+ baseUrl + `/Content/Uploads/` + data[i].Image + `" alt="`+data[i].Name+`" class="img-size">
+                                </div>
+                            </a>
+                            <a href="#"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
+                            <p>`+ data[i].Published +`</p>
+                        </div>`);
+
+                //  ----  /Home/Author/`+data[i].AuthorId+`
+            }
+        }
+
+        function clearProjectList() {
+            var projectListDocument = document.getElementById("ProjectList")
+            projectListDocument.innerHTML = "";
+        }
+
+        function changeText() {
+            const text = document.getElementById("SearchText").value;
+            if (text[text.length - 1] != ' ') {
+
+                if (selectedTags.size == 0) {
+                    $.get('/api/FilterProjectListByString', { words: text }, function (data) {
+                        RefreshProjectList(data);
+                        console.log(data)
+                    });
+                }
+                else
+                {
+                    var tagString = "";
+
+                    selectedTags.forEach(function (value) {
+                        if (tagString == "") {
+                            tagString += value;
+                        } else {
+                            tagString += " " + value;
+                        }
+                    })
+
+                    if (text != "") {
+                        $.get('/api/FilterProjectListByStringAndTags', { words: text, tags: tagString }, function (data) {
+                            RefreshProjectList(data);
+                            console.log(data)
+                        });
+                    } else {
+                        $.get('/api/FilterProjects', { Tags: tagString }, function (data) {
+                            console.log(data);
+                            RefreshProjectList(data);
+                        });
+                    }
+                }          
+            }
+        }
+
+        onInit();
+        
+    </script>
+
+</body>
+</html>
