@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="~/Content/css/style.css">
-
+    <script src="~/Scripts/jssor.slider-27.5.0.min.js"></script>
 </head>
 <body class="fluid-container">
     <header class="navbar container ">
@@ -171,6 +171,8 @@
                 item.Published = new Date(parseInt(item.Published.substr(6))).toLocaleDateString();
             })
 
+            console.log(data)
+
             for (var i = 0; i < data.length; i++) {
                 projectListDocument.innerHTML += (`
                         <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12  img-box">
@@ -180,7 +182,7 @@
                                      <img src="`+ baseUrl + `/Content/Uploads/` + data[i].Image + `" alt="`+data[i].Name+`" class="img-size">
                                 </div>
                             </a>
-                            <a href="#"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
+                            <a href="/Home/Author/`+ data[i].AuthorId+`"><h2>`+ data[i].FirstName + " " + data[i].LastName + `</h2></a>
                             <p>`+ data[i].Published +`</p>
                         </div>`);
 
